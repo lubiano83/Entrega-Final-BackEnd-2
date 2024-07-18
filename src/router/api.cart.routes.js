@@ -57,7 +57,7 @@ ROUTER.delete("/:cid/products/:pid", async (req, res) => {
 ROUTER.delete("/:id", async (req, res) => {
     try {
         const ID = req.params.id;
-        res.status(200).send(await CART.cleanCart(ID));
+        res.status(200).send(await CART.deleteCartById(ID));
     } catch (error) {
         console.log(error.message);
         res.status(500).json({ status: false, message: "Hubo un error en el servidor" });

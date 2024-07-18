@@ -9,36 +9,6 @@ export default class ProductManager {
         this.#itemModel = ProductModel;
     }
 
-    // Funciones privadas
-    #readItems = async (limit, skip, sort, filter) => {
-        try {
-            const items = await this.#itemModel.find(filter).limit(limit).skip(skip).sort(sort).lean();
-            return items;
-        } catch (error) {
-            console.log(error.message);
-            return "Hubo un error al leer el archivo";
-        }
-    };
-
-    #escribirArchivo = async (datos) => {
-        try {
-            return await datos.save();
-        } catch (error) {
-            console.log(error.message);
-            return "Hubo un error al escribir el archivo";
-        }
-    };
-
-    #identifyId = async (id) => {
-        try {
-            const itemId = await this.#itemModel.findById(id);
-            return itemId;
-        } catch (error) {
-            console.log(error.message);
-            return "Hubo un error al identificar el producto";
-        }
-    };
-
     // Funciones públicas
     countProducts = async () => {
         try {
@@ -54,7 +24,7 @@ export default class ProductManager {
         if (!category || !title || !description || !price || !code || !stock) {
             console.log("Todos los campos son obligatorios");
         }
-        const products = await this.#readItems();
+        const products = await this.#itemModel.find().lean();
         try {
             const product = new this.#itemModel({
                 category,
@@ -70,7 +40,7 @@ export default class ProductManager {
             if (sameCode){
                 return "El codigo ya existe";
             }
-            await this.#escribirArchivo(product);
+            await product.save();
             return "Producto agregado correctamente";
         } catch (error) {
             console.log(error.message);
@@ -83,7 +53,7 @@ export default class ProductManager {
             return null;
         }
         try {
-            const product = await this.#identifyId(id);
+            const product = await this.#itemModel.findById(id);
             return product;
         } catch (error) {
             console.log(error.message);
@@ -126,10 +96,10 @@ export default class ProductManager {
             return null;
         }
         try {
-            const product = await this.#identifyId(id);
+            const product = await this.#itemModel.findById(id);
             if (product) {
                 product.available = !product.available;
-                await this.#escribirArchivo(product);
+                await product.save();
                 return product;
             } else {
                 return "Producto no encontrado";
@@ -142,7 +112,7 @@ export default class ProductManager {
 
     getProducts = async (limit, skip, sort, filter) => {
         try {
-            return await this.#readItems(limit, skip, sort, filter);
+            return await this.#itemModel.find(filter).limit(limit).skip(skip).sort(sort).lean();
         } catch (error) {
             console.log(error.message);
             return "Hubo un error al obtener los productos";
