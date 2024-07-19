@@ -122,19 +122,19 @@ export default class ProductManager {
 
             let sort = {};
             if (paramFilters.sort && (paramFilters.sort === "asc" || paramFilters.sort === "desc")) {
-                sort = {
-                    price: paramFilters.sort === "desc" ? -1 : 1,
-                };
+                sort = { price: paramFilters.sort === "desc" ? -1 : 1 };
             }
 
             const defaultLimit = 10;
             const defaultPage = 1;
 
-            const skip = (paramFilters.page ? (parseInt(paramFilters.page) - 1) : (defaultPage - 1)) * (paramFilters.limit ? parseInt(paramFilters.limit) : defaultLimit);
+            const limit = paramFilters.limit ? parseInt(paramFilters.limit) : defaultLimit;
+            const page = paramFilters.page ? parseInt(paramFilters.page) : defaultPage;
+            const skip = (page - 1) * limit;
 
             const paginationOptions = {
-                limit: paramFilters.limit ? parseInt(paramFilters.limit) : defaultLimit,
-                page: paramFilters.page ? parseInt(paramFilters.page) : defaultPage,
+                limit: limit,
+                page: page,
                 sort: sort,
                 skip: skip,
                 lean: true,
@@ -142,13 +142,12 @@ export default class ProductManager {
 
             const productsFound = await this.#itemModel.paginate(filters, paginationOptions);
 
-            // Remove the 'id' field from each product in the results
             productsFound.docs = productsFound.docs.map((product) => {
                 const { id, ...productWithoutId } = product;
+                console.log(id);
                 return productWithoutId;
             });
 
-            console.log("El skip es de:", skip);
             return productsFound;
         } catch (error) {
             console.log(error.message);

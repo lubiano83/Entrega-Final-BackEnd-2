@@ -1,8 +1,8 @@
 <section class="products__table">
   <h1 class="titulo">Products</h1>
   <div class="table__categories">
-    {{#each products}}
-      {{#if this.available}}
+    {{#each products.docs}}
+      {{!-- {{#if this.available}} --}}
       <article class="categories__item">
         <div class="item__foto">
           <div><a href={{this.thumbnail.[0]}} target="_blank"><img class="thumbnail" src={{this.thumbnail.[0]}} alt={{this.thumbnail.[0]}}></a></div>
@@ -19,7 +19,7 @@
           </div>
         </div>
       </article>
-    {{/if}}
+    {{!-- {{/if}} --}}
     {{/each}}
   </div>
 </section>

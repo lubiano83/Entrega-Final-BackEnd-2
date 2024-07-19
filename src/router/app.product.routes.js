@@ -6,7 +6,7 @@ const PRODUCT = new ProductManager();
 
 ROUTER.get("/", async (req, res) => {
     try {
-        const allProducts = await PRODUCT.getProducts();
+        const allProducts = await PRODUCT.getProducts(req.query);
         return res.status(200).render("products", {
             title: "Products",
             products: allProducts,
