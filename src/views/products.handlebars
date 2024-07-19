@@ -15,20 +15,20 @@
           <div class="price">Price: {{this.price}}</div>
           <div class="stock">Stock: {{this.stock}}</div>
           <div>
-            <button class="add-btn" data-id={{this._id}}>Añadir al carrito</button>
+            <button>Añadir al carrito</button>
           </div>
         </div>
       </article>
-    {{/if}}
+      {{/if}}
     {{/each}}
   </div>
   <div class="container">
-    {{#if products.hasPrevPage}}
-        <a href="/products?page={{products.prevPage}}{{#if sort}}&sort={{sort}}{{/if}}{{#if limit}}&limit={{limit}}{{/if}}">Anterior</a>
-    {{/if}}
-    {{#if products.hasNextPage}}
-        <a href="/products?page={{products.nextPage}}{{#if sort}}&sort={{sort}}{{/if}}{{#if limit}}&limit={{limit}}{{/if}}">Siguiente</a>
-    {{/if}}
+    {{!-- {{#if products.hasPrevPage}} --}}
+        <a href="/products?page={{products.prevPage}}&sort={{products.sort}}&limit={{products.limit}}">Anterior</a>
+    {{!-- {{/if}} --}}
+    {{!-- {{#if products.hasNextPage}} --}}
+        <a href="/products?page={{products.nextPage}}&sort={{products.sort}}&limit={{products.limit}}">Siguiente</a>
+    {{!-- {{/if}} --}}
 
     <a href="/products?page={{products.page}}{{#if limit}}&limit={{limit}}{{/if}}&sort=asc">⬇</a>
     <a href="/products?page={{products.page}}{{#if limit}}&limit={{limit}}{{/if}}&sort=desc">⬆</a>
@@ -38,6 +38,6 @@
         <p>Página {{products.page}} de {{products.totalPages}}</p>
         <p>{{products.totalDocs}} Documentos</p>
     </div>
-    <a>Ir al carrito</a>
+    <a href="/cart">Ir al carrito</a>
   </div>
 </section>
