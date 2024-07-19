@@ -11,7 +11,7 @@ const productSchema = new Schema({
     thumbnail: { type: Array, required: true },
     code: { type: String, required: true, lowercase: true, unique: true, trim: true, index: { name: "idx_code" } },
     stock: { type: Number, required: true },
-    available: { type: Boolean, default: true },
+    available: { type: Boolean, default: true, index: { name: "idx_available" } },
 }, { versionKey: false, toJSON: { virtuals: false }, toObject: { virtuals: false } });
 
 productSchema.index({ category: 1, title: 1 }, { name: "idx_category_title" });

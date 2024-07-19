@@ -169,7 +169,7 @@ export default class CartManager {
 
     getCarts = async () => {
         try {
-            return await this.#itemModel.find().lean();
+            return await this.#itemModel.find().populate("products").lean();
         } catch (error) {
             console.log(error.message);
             return "Hubo un error al obtener los carritos";

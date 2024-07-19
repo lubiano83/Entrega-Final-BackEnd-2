@@ -117,6 +117,7 @@ export default class ProductManager {
             if (paramFilters?.category) $and.push({ category: paramFilters.category });
             if (paramFilters?.title) $and.push({ title: paramFilters.title });
             if (paramFilters?.code) $and.push({ code: paramFilters.code });
+            if (paramFilters?.available) $and.push({ available: paramFilters.available });
             const filters = $and.length > 0 ? { $and } : {};
 
             let sort = {};
@@ -136,7 +137,6 @@ export default class ProductManager {
                 page: paramFilters.page ? parseInt(paramFilters.page) : defaultPage,
                 sort: sort,
                 skip: skip,
-                populate: "",
                 lean: true,
             };
 
