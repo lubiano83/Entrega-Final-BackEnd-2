@@ -17,44 +17,8 @@ ROUTER.post("/", async (req, res) => {
 
 ROUTER.get("/", async (req, res) => {
     try {
-        const { limit, page, sort, filter } = req.query;
-        const limitNumber = limit ? Number(limit) : 10;
-        const pageNumber = page ? Number(page) : 1;
-        const skip = (pageNumber - 1) * limitNumber;
-        const totalProducts = await PRODUCT.countProducts();
-        const totalPages = Math.ceil(totalProducts / limitNumber);
-
-        const sortOptions = {};
-        if (sort) {
-            const [ field, order ] = sort.split(":");
-            sortOptions[field] = order === "asc" ? 1 : order === "desc" ? -1 : 1;
-        }
-
-        const filters = {};
-        if (filter) {
-            const filterPairs = filter.split(",");
-            filterPairs.forEach((pair) => {
-                const [ key, value ] = pair.split(":");
-                filters[key] = value;
-            });
-        }
-
-        const products = await PRODUCT.getProducts(limitNumber, skip, sortOptions, filters);
-
-        const result = {
-            status: true,
-            payload: products,
-            totalPages: totalPages,
-            prevPage: pageNumber > 1 ? pageNumber - 1 : null,
-            nextPage: pageNumber < totalPages ? pageNumber + 1 : null,
-            page: pageNumber,
-            hasNextPage: pageNumber < totalPages,
-            hasPrevPage: pageNumber > 1,
-            prevLink: pageNumber > 1 ? `/api/products?limit=${limitNumber}&page=${pageNumber - 1}&sort=${sort}&filter=${filter}` : null,
-            nextLink: pageNumber < totalPages ? `/api/products?limit=${limitNumber}&page=${pageNumber + 1}&sort=${sort}&filter=${filter}` : null,
-        };
-
-        return res.status(200).json({ result });
+        const products = await PRODUCT.getProducts(req.query);
+        return res.status(200).json({ status: true, payload: products });
     } catch (error) {
         console.log(error.message);
         res.status(500).json({ status: false, message: "Hubo un error en el servidor" });

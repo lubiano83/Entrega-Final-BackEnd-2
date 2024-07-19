@@ -10,15 +10,6 @@ export default class ProductManager {
     }
 
     // Funciones públicas
-    countProducts = async () => {
-        try {
-            return await ProductModel.countDocuments();
-        } catch (error) {
-            console.log(error.message);
-            return "Hubo un error al contar los productos";
-        }
-    };
-
     addProduct = async ({ category, title, description, price, thumbnail = [], code, stock, available }) => {
 
         if (!category || !title || !description || !price || !code || !stock) {
@@ -110,9 +101,38 @@ export default class ProductManager {
         }
     };
 
-    getProducts = async (limit, skip, sort, filter) => {
+    getProducts = async (paramFilters) => {
         try {
-            return await this.#itemModel.find(filter).limit(limit).skip(skip).sort(sort).lean();
+            const $and = [];
+
+            if (paramFilters?.category) $and.push({ category: paramFilters.category });
+            if (paramFilters?.title) $and.push({ title: paramFilters.title });
+            if (paramFilters?.code) $and.push({ code: paramFilters.code });
+            const filters = $and.length > 0 ? { $and } : {};
+
+            const sort = {
+                asc: { name: 1 },
+                desc: { name: -1 },
+            };
+
+            const paginationOptions = {
+                limit: paramFilters.limit ?? 10,
+                page: paramFilters.page ?? 1,
+                sort: sort[paramFilters?.sort] ?? {},
+                populate: "",
+                lean: true,
+            };
+
+            const productsFound = await this.#itemModel.paginate(filters, paginationOptions);
+
+            // Remove the 'id' field from each product in the results
+            productsFound.docs = productsFound.docs.map((product) => {
+                const { id, ...productWithoutId } = product;
+                return productWithoutId;
+            });
+
+            console.log(productsFound);
+            return productsFound;
         } catch (error) {
             console.log(error.message);
             return "Hubo un error al obtener los productos";
