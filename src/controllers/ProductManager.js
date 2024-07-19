@@ -10,6 +10,15 @@ export default class ProductManager {
     }
 
     // Funciones públicas
+    countProducts = async () => {
+        try {
+            return await ProductModel.countDocuments();
+        } catch (error) {
+            console.log(error.message);
+            return "Hubo un error al contar los productos";
+        }
+    };
+
     addProduct = async ({ category, title, description, price, thumbnail = [], code, stock, available }) => {
 
         if (!category || !title || !description || !price || !code || !stock) {
@@ -110,15 +119,23 @@ export default class ProductManager {
             if (paramFilters?.code) $and.push({ code: paramFilters.code });
             const filters = $and.length > 0 ? { $and } : {};
 
-            const sort = {
-                asc: { name: 1 },
-                desc: { name: -1 },
-            };
+            let sort = {};
+            if (paramFilters.sort && (paramFilters.sort === "asc" || paramFilters.sort === "desc")) {
+                sort = {
+                    price: paramFilters.sort === "desc" ? -1 : 1,
+                };
+            }
+
+            const defaultLimit = 10;
+            const defaultPage = 1;
+
+            const skip = (paramFilters.page ? (parseInt(paramFilters.page) - 1) : (defaultPage - 1)) * (paramFilters.limit ? parseInt(paramFilters.limit) : defaultLimit);
 
             const paginationOptions = {
-                limit: paramFilters.limit ?? 10,
-                page: paramFilters.page ?? 1,
-                sort: sort[paramFilters?.sort] ?? {},
+                limit: paramFilters.limit ? parseInt(paramFilters.limit) : defaultLimit,
+                page: paramFilters.page ? parseInt(paramFilters.page) : defaultPage,
+                sort: sort,
+                skip: skip,
                 populate: "",
                 lean: true,
             };
@@ -131,7 +148,7 @@ export default class ProductManager {
                 return productWithoutId;
             });
 
-            console.log(productsFound);
+            console.log("El skip es de:", skip);
             return productsFound;
         } catch (error) {
             console.log(error.message);
