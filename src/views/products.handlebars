@@ -2,7 +2,7 @@
   <h1 class="titulo">Products</h1>
   <div class="table__categories">
     {{#each products.docs}}
-      {{!-- {{#if this.available}} --}}
+      {{#if this.available}}
       <article class="categories__item">
         <div class="item__foto">
           <div><a href={{this.thumbnail.[0]}} target="_blank"><img class="thumbnail" src={{this.thumbnail.[0]}} alt={{this.thumbnail.[0]}}></a></div>
@@ -15,11 +15,29 @@
           <div class="price">Price: {{this.price}}</div>
           <div class="stock">Stock: {{this.stock}}</div>
           <div>
-            <button id={{this.id}}>Agregar</button>
+            <button class="add-btn" data-id={{this._id}}>Añadir al carrito</button>
           </div>
         </div>
       </article>
-    {{!-- {{/if}} --}}
+    {{/if}}
     {{/each}}
+  </div>
+  <div class="container">
+    {{#if products.hasPrevPage}}
+        <a href="/products?page={{products.prevPage}}{{#if sort}}&sort={{sort}}{{/if}}{{#if limit}}&limit={{limit}}{{/if}}">Anterior</a>
+    {{/if}}
+    {{#if products.hasNextPage}}
+        <a href="/products?page={{products.nextPage}}{{#if sort}}&sort={{sort}}{{/if}}{{#if limit}}&limit={{limit}}{{/if}}">Siguiente</a>
+    {{/if}}
+
+    <a href="/products?page={{products.page}}{{#if limit}}&limit={{limit}}{{/if}}&sort=asc">⬇</a>
+    <a href="/products?page={{products.page}}{{#if limit}}&limit={{limit}}{{/if}}&sort=desc">⬆</a>
+    <a href="/products?page={{products.page}}{{#if limit}}&limit={{limit}}{{/if}}">X</a>
+
+    <div>
+        <p>Página {{products.page}} de {{products.totalPages}}</p>
+        <p>{{products.totalDocs}} Documentos</p>
+    </div>
+    <a>Ir al carrito</a>
   </div>
 </section>
