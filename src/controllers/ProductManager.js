@@ -10,15 +10,6 @@ export default class ProductManager {
     }
 
     // Funciones públicas
-    countProducts = async () => {
-        try {
-            return await ProductModel.countDocuments();
-        } catch (error) {
-            console.log(error.message);
-            return "Hubo un error al contar los productos";
-        }
-    };
-
     addProduct = async ({ category, title, description, price, thumbnail = [], code, stock, available }) => {
 
         if (!category || !title || !description || !price || !code || !stock) {
