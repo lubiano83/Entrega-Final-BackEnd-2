@@ -1,7 +1,7 @@
 <section class="products__table">
   <h1 class="titulo">Products</h1>
   <div class="table__categories">
-    {{#each products.docs}}
+    {{#each products.productsFound.docs}}
       {{#if this.available}}
       <article class="categories__item">
         <div class="item__foto">
@@ -24,22 +24,21 @@
   </div>
   <div class="container">
     <div>
-      {{#if products.prevPage}}
-      <a href="/products?page={{products.prevPage}}{{#if product.sort}}&sort={{products.sort}}{{/if}}{{#if products.limit}}&limit={{products.limit}}{{/if}}">Anterior</a>
+      {{#if products.productsFound.prevPage}}
+      <a href="/products?page={{products.productsFound.prevPage}}{{#if product.productsFound.sort}}&sort={{products.productsFound.sort}}{{/if}}{{#if products.productsFound.limit}}&limit={{products.productsFound.limit}}{{/if}}">Anterior</a>
       {{/if}}
-      {{#if products.nextPage}}
-      <a href="/products?page={{products.nextPage}}{{#if product.sort}}&sort={{products.sort}}{{/if}}{{#if products.limit}}&limit={{products.limit}}{{/if}}">Siguiente</a>
+      {{#if products.productsFound.nextPage}}
+      <a href="/products?page={{products.productsFound.nextPage}}{{#if product.productsFound.sort}}&sort={{products.productsFound.sort}}{{/if}}{{#if products.productsFound.limit}}&limit={{products.productsFound.limit}}{{/if}}">Siguiente</a>
       {{/if}}
     </div>
     <div>
-      <a href="/products?page={{products.page}}{{#if limit}}&limit={{limit}}{{/if}}&sort=asc">⬇</a>
-      <a href="/products?page={{products.page}}{{#if limit}}&limit={{limit}}{{/if}}&sort=desc">⬆</a>
+      <a href="/products?page={{products.productsFound.page}}{{#if limit}}&limit={{limit}}{{/if}}&sort=asc">Ascendente</a>
+      <a href="/products?page={{products.productsFound.page}}{{#if limit}}&limit={{limit}}{{/if}}&sort=desc">Descendente</a>
     </div>
-    <a href="/products?page={{products.page}}{{#if limit}}&limit={{limit}}{{/if}}">X</a>
     <div>
-        <p>Página {{products.page}} de {{products.totalPages}}</p>
-        <p>{{products.totalDocs}} Documentos</p>
+        <a href="/products?page={{products.productsFound.page}}{{#if limit}}&limit={{limit}}{{/if}}">Reset</a>
+        <p><span>Página {{products.productsFound.page}} de {{products.productsFound.totalPages}}</span>, <span>{{products.productsFound.totalDocs}} Documentos</span> y <span>Omitidos: {{products.skip}}</span></p>
+        
     </div>
-    <a href="/cart">Ir al carrito</a>
   </div>
 </section>

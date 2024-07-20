@@ -141,8 +141,7 @@ export default class ProductManager {
                 return productWithoutId;
             });
 
-            console.log("El skip es de:", skip);
-            return productsFound;
+            return { productsFound, skip };
         } catch (error) {
             console.log(error.message);
             return "Hubo un error al obtener los productos";
