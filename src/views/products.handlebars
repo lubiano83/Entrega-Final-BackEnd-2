@@ -23,17 +23,15 @@
     {{/each}}
   </div>
   <div class="container">
-    {{!-- {{#if products.hasPrevPage}} --}}
-        <a href="/products?page={{products.prevPage}}&sort={{products.sort}}&limit={{products.limit}}">Anterior</a>
-    {{!-- {{/if}} --}}
-    {{!-- {{#if products.hasNextPage}} --}}
-        <a href="/products?page={{products.nextPage}}&sort={{products.sort}}&limit={{products.limit}}">Siguiente</a>
-    {{!-- {{/if}} --}}
-
-    <a href="/products?page={{products.page}}{{#if limit}}&limit={{limit}}{{/if}}&sort=asc">⬇</a>
-    <a href="/products?page={{products.page}}{{#if limit}}&limit={{limit}}{{/if}}&sort=desc">⬆</a>
+    <div>
+      <a href="/products?page={{products.prevPage}}&sort={{products.sort}}&limit={{products.limit}}">Anterior</a>
+      <a href="/products?page={{products.nextPage}}&sort={{products.sort}}&limit={{products.limit}}">Siguiente</a>
+    </div>
+    <div>
+      <a href="/products?page={{products.page}}{{#if limit}}&limit={{limit}}{{/if}}&sort=asc">⬇</a>
+      <a href="/products?page={{products.page}}{{#if limit}}&limit={{limit}}{{/if}}&sort=desc">⬆</a>
+    </div>
     <a href="/products?page={{products.page}}{{#if limit}}&limit={{limit}}{{/if}}">X</a>
-
     <div>
         <p>Página {{products.page}} de {{products.totalPages}}</p>
         <p>{{products.totalDocs}} Documentos</p>
