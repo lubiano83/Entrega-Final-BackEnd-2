@@ -24,8 +24,12 @@
   </div>
   <div class="container">
     <div>
-      <a href="/products?page={{products.prevPage}}&sort={{products.sort}}&limit={{products.limit}}">Anterior</a>
-      <a href="/products?page={{products.nextPage}}&sort={{products.sort}}&limit={{products.limit}}">Siguiente</a>
+      {{#if products.prevPage}}
+      <a href="/products?page={{products.prevPage}}{{#if product.sort}}&sort={{products.sort}}{{/if}}{{#if products.limit}}&limit={{products.limit}}{{/if}}">Anterior</a>
+      {{/if}}
+      {{#if products.nextPage}}
+      <a href="/products?page={{products.nextPage}}{{#if product.sort}}&sort={{products.sort}}{{/if}}{{#if products.limit}}&limit={{products.limit}}{{/if}}">Siguiente</a>
+      {{/if}}
     </div>
     <div>
       <a href="/products?page={{products.page}}{{#if limit}}&limit={{limit}}{{/if}}&sort=asc">⬇</a>
