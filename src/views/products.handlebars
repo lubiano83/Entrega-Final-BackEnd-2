@@ -22,7 +22,6 @@
       {{/if}}
     {{/each}}
   </div>
-  <div class="container">
     <div>
       {{#if products.productsFound.prevPage}}
       <a href="/products?page={{products.productsFound.prevPage}}{{#if product.productsFound.sort}}&sort={{products.productsFound.sort}}{{/if}}{{#if products.productsFound.limit}}&limit={{products.productsFound.limit}}{{/if}}">Anterior</a>
@@ -35,10 +34,8 @@
       <a href="/products?page={{products.productsFound.page}}{{#if limit}}&limit={{limit}}{{/if}}&sort=asc">Ascendente</a>
       <a href="/products?page={{products.productsFound.page}}{{#if limit}}&limit={{limit}}{{/if}}&sort=desc">Descendente</a>
     </div>
-    <div>
+    <div class="listadoInfoProducts">
         <a href="/products?page={{products.productsFound.page}}{{#if limit}}&limit={{limit}}{{/if}}">Reset</a>
-        <p><span>Página {{products.productsFound.page}} de {{products.productsFound.totalPages}}</span>, <span>{{products.productsFound.totalDocs}} Documentos</span> y <span>Omitidos: {{products.skip}}</span></p>
-        
+        <p><span>Página {{products.productsFound.page}} de {{products.productsFound.totalPages}}</span>, <span>{{products.productsFound.totalDocs}} Documentos</span> y <span>{{products.skip}} Omitidos</span></p>
     </div>
-  </div>
 </section>

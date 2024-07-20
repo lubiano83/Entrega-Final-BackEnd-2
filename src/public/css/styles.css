@@ -7,7 +7,7 @@
 
 /* General */
 body {
-    height: 100vh;
+    min-height: 100vh;
     width: 100vw;
     color: white;
     background-image: linear-gradient(to bottom, #4b4453, #4d4858, #4f4c5d, #515062, #525467, #53586c, #545b70, #545f75, #55637a, #55677e, #556c83, #557087);
@@ -173,7 +173,7 @@ body {
 /* Products */
 body .products__table {
     width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
     text-align: center;
 }
 body .products__table .titulo {
@@ -209,6 +209,10 @@ body .products__table .table__categories .categories__item .item__foto .thumbnai
 }
 body .products__table .table__categories .categories__item .item__texto {
     padding: 10px;
+}
+
+.listadoInfoProducts {
+    padding-bottom: 30px;
 }
 
 /* Home */
