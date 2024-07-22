@@ -70,7 +70,10 @@ ROUTER.put("/:cid/products/:pid", async (req, res) => {
         const productId = req.params.pid;
         const { quantity } = req.body;
 
-        // Validar que la cantidad sea un número
+        console.log("cartId:", cartId);
+        console.log("productId:", productId);
+        console.log("quantity:", quantity);
+
         if (typeof quantity !== "number") {
             return res.status(400).json({ status: false, message: "Cantidad inválida" });
         }
