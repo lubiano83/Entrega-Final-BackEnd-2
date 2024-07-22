@@ -86,7 +86,7 @@ export default class CartManager {
                 return "Carrito no encontrado";
             }
 
-            const productIndex = cart.products.findIndex((p) => p.id.toString() === productId.toString());
+            const productIndex = cart.products.findIndex((p) => p.id._id.toString() === productId.toString());
 
             if (productIndex !== -1) {
                 cart.products.splice(productIndex, 1);
@@ -114,25 +114,18 @@ export default class CartManager {
                 return "Carrito no encontrado";
             }
 
-            console.log("Carrito encontrado:", JSON.stringify(cart, null, 2));
-
             const productIndex = cart.products.findIndex((p) => p.id._id.toString() === productId.toString());
-            console.log("productId proporcionado:", productId);
-            console.log("productIndex encontrado:", productIndex);
-            console.log("IDs de productos en el carrito:", cart.products.map((p) => p.id._id.toString()));
 
             if (productIndex !== -1) {
                 cart.products[productIndex].quantity = quantity;
-                console.log("Nueva cantidad del producto:", quantity);
                 await cart.save();
-                console.log("Carrito guardado exitosamente");
                 return "Cantidad de producto modificada";
             } else {
                 return "Producto no encontrado en el carrito";
             }
 
         } catch (error) {
-            console.log("Error al modificar la cantidad del producto en el carrito:", error.message);
+            console.log(error.message);
             return "Error al modificar la cantidad del producto en el carrito";
         }
     };
