@@ -57,7 +57,6 @@ export default class CartManager {
             }
 
             const productInCart = cart.products.find((p) => p.id.toString() === productId.toString());
-            console.log("Producto en carrito:", productInCart);
 
             if (productInCart) {
                 productInCart.quantity++;
@@ -153,6 +152,13 @@ export default class CartManager {
         if (!mongoDB.isValidId(id)) {
             return null;
         }
+
+        const productId = await this.#itemModel.findById(id);
+
+        if(productId !== id) {
+            return "Ese Id no existe";
+        }
+
         try {
             const updatedCart = await this.#itemModel.findByIdAndUpdate(id, updateData, { new: true });
             if (updatedCart) {
