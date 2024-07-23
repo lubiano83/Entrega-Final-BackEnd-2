@@ -29,7 +29,7 @@ export default class CartManager {
             return "ID no válido";
         }
         try {
-            const respuesta = await this.#itemModel.findById(id);
+            const respuesta = await this.#itemModel.findById(id).populate("products");
             if(!respuesta){
                 return "Not found";
             } else {
@@ -56,7 +56,7 @@ export default class CartManager {
                 return "Producto no encontrado";
             }
 
-            const productInCart = cart.products.find((p) => p.id.toString() === productId.toString());
+            const productInCart = cart.products.find((p) => p.id._id.toString() === productId.toString());
 
             if (productInCart) {
                 productInCart.quantity++;
@@ -171,6 +171,23 @@ export default class CartManager {
             return "Error al actualizar el carrito"; // Lanza un error si algo sale mal
         }
     };
+
+    // clearCart = async (cartId) => {
+    //     if (!mongoDB.isValidId(cartId)) {
+    //         return false;
+    //     }
+    //     try {
+    //         const cart = await this.#itemModel.findById(cartId);
+    //         if (!cart) {
+    //             return false;
+    //         }
+    //         cart.products = [];
+    //         return await cart.save();
+    //     } catch (error) {
+    //         console.log(error.message);
+    //         return "Error al eliminar los productos del carrito";
+    //     }
+    // };
 
     getCarts = async () => {
         try {

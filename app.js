@@ -1,4 +1,3 @@
-/* Servidor Express */
 import express from "express";
 import mongoDB from "./src/config/mongoose.config.js";
 import productRouter from "./src/router/api.product.routes.js";
@@ -17,10 +16,10 @@ const APP = express();
 APP.use(express.urlencoded({ extended: true })); // para recibir los datos en urlencoded desde postman
 APP.use(express.json());
 
-// configuracion del motor de plantillas
+// configuración del motor de plantillas
 handlebars.CONFIG(APP);
 
-// declaracion de ruta estatica
+// declaración de ruta estática
 APP.use("/", express.static(PATH.css));
 APP.use("/", express.static(PATH.js));
 APP.use("/", express.static(PATH.images));
@@ -38,22 +37,22 @@ APP.use("/products", viewsProductRouter);
 APP.use("/api/products", productRouter);
 APP.use("/api/carts", cartRouter);
 
-// Metodo que gestiona las rutas inexistentes.
+// Método que gestiona las rutas inexistentes.
 APP.use("*", (req, res) => {
     return res.status(404).send("<h1>Error 404: Not Found</h1>");
 });
 
-// control de errores internos
+// Control de errores internos
 APP.use((error, req, res) => {
     console.log("Error:", error.message);
     res.status(500).send("<h1>Error 500: Error en el Servidor</h1>");
 });
 
-// metodo oyente de solicitudes
+// Método oyente de solicitudes
 const serverHTTP = APP.listen(PORT, () => {
-    console.log(`Ejecutandose en http://${HOST}:${PORT}`);
+    console.log(`Ejecutándose en http://${HOST}:${PORT}`);
     mongoDB.connectDB();
 });
 
-// asi enviamos el serverHttp al socket.config.js.
+// Envío del serverHTTP al socket.config.js
 serverSocket.CONFIG(serverHTTP);

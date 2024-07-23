@@ -7,6 +7,9 @@ const CART = new CartManager();
 ROUTER.get("/", async (req, res) => {
     try {
         const allCarts = await CART.getCarts();
+        if (!allCarts) {
+            return res.status(404).send("<h1>Carritos no encontrados</h1>");
+        }
         res.status(200).render("carts", { title: "Carts", carts: allCarts });
     } catch (error) {
         res.status(500).send(error.message);
@@ -21,7 +24,7 @@ ROUTER.get("/:id", async (req, res) => {
         if (!cart) {
             return res.status(404).send("<h1>Carrito no encontrado</h1>");
         }
-        return res.status(200).render("cartDetail", { title: "Cart Detail", cart: cart });
+        res.status(200).render("cartDetail", { title: "Cart Detail", cart: cart });
     } catch (error) {
         console.log(error.message);
         res.status(500).send("<h1>Hubo un error en el servidor</h1>");

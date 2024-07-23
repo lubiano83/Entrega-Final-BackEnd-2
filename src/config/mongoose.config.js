@@ -13,7 +13,8 @@ const connectDB = async () => {
         await connect(URI, options);
         console.log("Conectado a la base de datos");
     } catch (error) {
-        console.error("Error al conectar a la base de datos", error);
+        console.error(error.message);
+        return "Error al conectar a la base de datos";
     }
 };
 

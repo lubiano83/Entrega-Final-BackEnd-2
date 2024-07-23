@@ -1,18 +1,19 @@
 <section class="products__table">
-  <h1 class="titulo">Carts</h1>
+  <h1 class="titulo">Cart Detail</h1>
   <div class="table__categories">
     {{#each cart}}
-        {{#if this._id}}
-            <article class="categories__item">
-                <div class="item__texto">
-                <div class="id">Cart Id: {{this._id}}</div>
-                {{#each products}}
-                    <div class="price">Product Id: {{this.id._id}}</div>
-                    <div class="price">Quantity: {{this.quantity}}</div>
-                {{/each}}
-                </div>
-            </article>
-        {{/if}}
+      {{#if this._id}}
+        <article class="categories__item">
+          <div class="item__texto">
+            <div class="id">Cart Id: {{this._id}}</div>
+            {{#each products}}
+              <div class="price">Product Id: {{this.id._id}}</div>
+              <div class="price">Quantity: {{this.quantity}}</div>
+            {{/each}}
+          </div>
+            <button>Limpiar</button>
+        </article>
+      {{/if}}
     {{/each}}
   </div>
 </section>
