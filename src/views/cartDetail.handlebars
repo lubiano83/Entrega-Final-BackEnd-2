@@ -3,7 +3,6 @@
   <div class="table__categories">
     {{#each cart}}
       {{#if this._id}}
-        <article class="categories__item">
           <div class="item__texto">
             <div class="id">Cart Id: {{this._id}}</div>
             {{#each products}}
@@ -14,7 +13,6 @@
             <form action="/carts/{{this._id}}/clear" method="POST">
               <button type="submit">Limpiar</button>
             </form>
-        </article>
       {{/if}}
     {{/each}}
   </div>
