@@ -20,15 +20,10 @@ APP.use(express.json());
 handlebars.CONFIG(APP);
 
 // declaración de ruta estática
-APP.use("/", express.static(PATH.css));
-APP.use("/", express.static(PATH.js));
-APP.use("/", express.static(PATH.images));
-APP.use("/products", express.static(PATH.css));
-APP.use("/products", express.static(PATH.images));
-APP.use("/carts", express.static(PATH.css));
-APP.use("/realTimeProducts", express.static(PATH.js));
-APP.use("/realTimeProducts", express.static(PATH.css));
-APP.use("/realTimeProducts", express.static(PATH.images));
+APP.use("/", express.static(PATH.public));
+APP.use("/products", express.static(PATH.public));
+APP.use("/carts", express.static(PATH.public));
+APP.use("/realTimeProducts", express.static(PATH.public));
 
 // Declaración de enrutadores
 APP.use("/", viewsRouter);
