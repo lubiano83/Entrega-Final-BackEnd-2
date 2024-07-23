@@ -11,7 +11,9 @@
               <div class="price">Quantity: {{this.quantity}}</div>
             {{/each}}
           </div>
-            <button>Limpiar</button>
+            <form action="/carts/{{this._id}}/clear" method="POST">
+              <button type="submit">Limpiar</button>
+            </form>
         </article>
       {{/if}}
     {{/each}}

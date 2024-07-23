@@ -29,7 +29,7 @@ export default class CartManager {
             return "ID no válido";
         }
         try {
-            const respuesta = await this.#itemModel.findById(id).populate("products");
+            const respuesta = await this.#itemModel.findById(id);
             if(!respuesta){
                 return "Not found";
             } else {
@@ -172,22 +172,22 @@ export default class CartManager {
         }
     };
 
-    // clearCart = async (cartId) => {
-    //     if (!mongoDB.isValidId(cartId)) {
-    //         return false;
-    //     }
-    //     try {
-    //         const cart = await this.#itemModel.findById(cartId);
-    //         if (!cart) {
-    //             return false;
-    //         }
-    //         cart.products = [];
-    //         return await cart.save();
-    //     } catch (error) {
-    //         console.log(error.message);
-    //         return "Error al eliminar los productos del carrito";
-    //     }
-    // };
+    clearCart = async (cartId) => {
+        if (!mongoDB.isValidId(cartId)) {
+            return false;
+        }
+        try {
+            const cart = await this.#itemModel.findById(cartId);
+            if (!cart) {
+                return false;
+            }
+            cart.products = [];
+            return await cart.save();
+        } catch (error) {
+            console.log(error.message);
+            return "Error al eliminar los productos del carrito";
+        }
+    };
 
     getCarts = async () => {
         try {

@@ -31,4 +31,20 @@ ROUTER.get("/:id", async (req, res) => {
     }
 });
 
+ROUTER.post("/:id/clear", async (req, res) => {
+    try {
+        const ID = req.params.id;
+        const result = await CART.clearCart(ID); // Usa el método clearCart
+        if (result === false) {
+            return res.status(404).send("<h1>Carrito no encontrado</h1>");
+        } else if (result === "Error al eliminar los productos del carrito") {
+            return res.status(500).send("<h1>Error al eliminar los productos del carrito</h1>");
+        }
+        res.status(200).redirect(`/carts/${ID}`);
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send("<h1>Hubo un error en el servidor</h1>");
+    }
+});
+
 export default ROUTER;
