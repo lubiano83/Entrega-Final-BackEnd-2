@@ -3,7 +3,6 @@
   <div class="table__categories">
     {{#each product}}
       {{#if this.available}}
-      <article class="categories__item">
         <div class="item__foto">
           <div><a href={{this.thumbnail.[0]}} target="_blank"><img class="thumbnail" src={{this.thumbnail.[0]}} alt={{this.thumbnail.[0]}}></a></div>
         </div>
@@ -14,11 +13,11 @@
           <div class="title">Title: {{this.title}}</div>
           <div class="price">Price: {{this.price}}</div>
           <div class="stock">Stock: {{this.stock}}</div>
+          <div class="description">Description: {{this.description}}</div>
             <form action="/products/{{this._id}}/add-to-cart" method="POST">
               <button type="submit">Add to Cart</button>
             </form>
         </div>
-      </article>
       {{/if}}
     {{/each}}
 </section>
