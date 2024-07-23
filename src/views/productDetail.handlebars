@@ -1,0 +1,25 @@
+<section class="products__table">
+  <h1 class="titulo">Product</h1>
+  <div class="table__categories">
+    {{#each product}}
+      {{#if this.available}}
+      <article class="categories__item">
+        <div class="item__foto">
+          <div><a href={{this.thumbnail.[0]}} target="_blank"><img class="thumbnail" src={{this.thumbnail.[0]}} alt={{this.thumbnail.[0]}}></a></div>
+        </div>
+        <div class="item__texto">
+          <div class="id">Id: {{this._id}}</div>
+          <div class="code">Code: {{this.code}}</div>
+          <div class="category">Category: {{this.category}}</div>
+          <div class="title">Title: {{this.title}}</div>
+          <div class="price">Price: {{this.price}}</div>
+          <div class="stock">Stock: {{this.stock}}</div>
+          <a href="#">
+            <button>Add to Cart</button>
+          </a>
+        </div>
+      </article>
+      {{/if}}
+    {{/each}}
+</section>
+

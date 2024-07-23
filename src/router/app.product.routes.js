@@ -14,4 +14,18 @@ ROUTER.get("/", async (req, res) => {
     }
 });
 
+ROUTER.get("/:id", async (req, res) => {
+    try {
+        const ID = req.params.id;
+        const product = await PRODUCT.getProductById(ID);
+        if (!product) {
+            return res.status(404).send("<h1>Producto no encontrado</h1>");
+        }
+        return res.status(200).render("productDetail", { title: "Product Detail", product: product });
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send("<h1>Hubo un error en el servidor</h1>");
+    }
+});
+
 export default ROUTER;

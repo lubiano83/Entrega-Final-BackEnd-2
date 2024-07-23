@@ -45,6 +45,9 @@ export default class ProductManager {
         }
         try {
             const product = await this.#itemModel.findById(id);
+            if (!product) {
+                return null;
+            }
             return product;
         } catch (error) {
             console.log(error.message);
