@@ -14,4 +14,18 @@ ROUTER.get("/", async (req, res) => {
     }
 });
 
+ROUTER.get("/:id", async (req, res) => {
+    try {
+        const ID = req.params.id;
+        const cart = await CART.getCartById(ID);
+        if (!cart) {
+            return res.status(404).send("<h1>Carrito no encontrado</h1>");
+        }
+        return res.status(200).render("cartDetail", { title: "Cart Detail", cart: cart });
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send("<h1>Hubo un error en el servidor</h1>");
+    }
+});
+
 export default ROUTER;
