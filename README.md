@@ -10,3 +10,4 @@ Este proyecto es una tienda en línea construida utilizando Express.js para el b
 - **mongoose-paginate-v2**: para implementar la paginación en los modelos de Mongoose. `mongoose-paginate-v2` es un plugin de paginación flexible y fácil de usar para Mongoose.
 - **ESLint**: para asegurar la calidad del código y seguir buenas prácticas de desarrollo. Además, utiliza `eslint-plugin-mongodb` para proporcionar reglas específicas para trabajar con MongoDB en el código.
 # 1era-Entrega-BackEnd-2
+# 1era-Entrega-BackEnd-2
