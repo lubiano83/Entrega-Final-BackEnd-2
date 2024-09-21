@@ -5,14 +5,14 @@ const ROUTER = Router();
 
 // Ruta post para generar un nuevo usuario
 ROUTER.post("/register", async (req, res) => {
-    let { first_name, last_name, email, password, age } = req.body;
+    let { first_name, last_name, email, password, age, rol } = req.body;
 
     try {
-        // Verificar si el correo ya esta registrado
+        // Verificar si el correo ya está registrado
         const existeUsuario = await UserModel.findOne({ email: email });
 
-        if(existeUsuario) {
-            return res.send("El correo ya esta registrado");
+        if (existeUsuario) {
+            return res.send("El correo ya está registrado");
         }
 
         // Crear un usuario
@@ -22,13 +22,16 @@ ROUTER.post("/register", async (req, res) => {
             email,
             password,
             age,
+            rol
         });
 
-        // Almacenar los datos del usuario en la session
+        // Almacenar los datos del usuario en la sesión
         req.session.user = {
             first_name: nuevoUsuario.first_name,
             last_name: nuevoUsuario.last_name,
             email: nuevoUsuario.email,
+            age: nuevoUsuario.age, // Almacenar la edad
+            rol: nuevoUsuario.rol  // Almacenar el rol
         };
 
         req.session.login = true;
@@ -50,7 +53,9 @@ ROUTER.post("/login", async (req, res) => {
                 req.session.user = {
                     first_name: usuarioBuscado.first_name,
                     last_name: usuarioBuscado.last_name,
-                    email: usuarioBuscado.email
+                    email: usuarioBuscado.email,
+                    age: usuarioBuscado.age, // Almacenar la edad
+                    rol: usuarioBuscado.rol  // Almacenar el rol
                 };
 
                 req.session.login = true;
@@ -69,7 +74,7 @@ ROUTER.post("/login", async (req, res) => {
 // Logout
 ROUTER.get("/logout", (req, res) => {
     try {
-        if(req.session.login) {
+        if (req.session.login) {
             req.session.destroy();
         }
         res.redirect("/");

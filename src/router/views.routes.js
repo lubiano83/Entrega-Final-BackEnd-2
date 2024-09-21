@@ -25,7 +25,14 @@ ROUTER.get("/realtimeproducts", async (req, res) => {
 
 ROUTER.get("/admin", async (req, res) => {
     try {
-        return res.status(200).render("home", { title: "Home" });
+        // Verifica si hay un usuario en la sesión
+        const user = req.session.user || null;
+
+        // Renderiza la vista pasando el usuario y el título
+        return res.status(200).render("home", { 
+            title: "Home", 
+            user // Pasar el objeto `user` a la vista
+        });
     } catch (error) {
         console.log(error.message);
         res.status(500).json({ status: false, message: "Hubo un error en el servidor" });

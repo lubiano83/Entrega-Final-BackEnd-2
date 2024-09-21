@@ -7,4 +7,10 @@
     <a href="http://localhost:8080/explain" target="_blank"><button>Explain</button></a>
      <a href="/profile"><button>Profile</button></a>
   </div>
+  <br>
+  {{#if user}}
+  <h3>Bienvenido, {{user.first_name}} {{user.last_name}}</h3>
+  {{else}}
+  <h3>Bienvenido, Invitado</h3>
+  {{/if}}
 </section>
