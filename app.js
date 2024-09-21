@@ -8,6 +8,8 @@ import viewsRouter from "./src/router/views.routes.js";
 import PATH from "./src/utils/path.js";
 import handlebars from "./src/config/handlebars.config.js";
 import serverSocket from "./src/config/socket.config.js";
+import session from "express-session";
+import MongoStore from "connect-mongo";
 
 const PORT = 8080;
 const HOST = "localhost"; // 127.0.0.1
@@ -18,6 +20,14 @@ APP.use(express.json());
 
 // configuración del motor de plantillas
 handlebars.CONFIG(APP);
+
+// Configuración de sesiones
+APP.use(session({
+    secret: "secretCoder",
+    resave: true,
+    saveUninitialized: true,
+    store: MongoStore.create({ mongoUrl: "mongodb+srv://lubiano83:OdGteJUhwyj5SJ4H@lubiano83.egrhqkm.mongodb.net/Storage?retryWrites=true&w=majority&appName=lubiano83", ttl: 100 }),
+}));
 
 // declaración de ruta estática
 APP.use("/", express.static(PATH.public));

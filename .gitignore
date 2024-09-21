@@ -1,1 +1,5 @@
+# Ignorar node_modules
 node_modules/
+
+# Ignorar el archivo .env que contiene variables sensibles
+.env

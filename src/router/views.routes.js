@@ -23,13 +23,34 @@ ROUTER.get("/realtimeproducts", async (req, res) => {
     }
 });
 
-ROUTER.get("/", async (req, res) => {
+ROUTER.get("/admin", async (req, res) => {
     try {
         return res.status(200).render("home", { title: "Home" });
     } catch (error) {
         console.log(error.message);
         res.status(500).json({ status: false, message: "Hubo un error en el servidor" });
     }
+});
+
+ROUTER.get("/", (req, res) => {
+    if(req.session.login) {
+        return res.redirect("/admin");
+    }
+    res.render("login");
+});
+
+ROUTER.get("/register", (req, res) => {
+    if(req.session.login) {
+        return res.redirect("/admin");
+    }
+    res.render("register");
+});
+
+ROUTER.get("/profile", (req, res) => {
+    if(!req.session.login) {
+        return res.redirect("/");
+    }
+    res.render("profile", { user: req.session.user });
 });
 
 export default ROUTER;
