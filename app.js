@@ -10,6 +10,7 @@ import handlebars from "./src/config/handlebars.config.js";
 import serverSocket from "./src/config/socket.config.js";
 import session from "express-session";
 import MongoStore from "connect-mongo";
+import sessionsRouter from "./src/router/sessions.routes.js";
 
 const PORT = 8080;
 const HOST = "localhost"; // 127.0.0.1
@@ -26,7 +27,7 @@ APP.use(session({
     secret: "secretCoder",
     resave: true,
     saveUninitialized: true,
-    store: MongoStore.create({ mongoUrl: "mongodb+srv://lubiano83:OdGteJUhwyj5SJ4H@lubiano83.egrhqkm.mongodb.net/Storage?retryWrites=true&w=majority&appName=lubiano83", ttl: 100 }),
+    store: MongoStore.create({ mongoUrl: process.env.MONGO_URL, ttl: 100 }),
 }));
 
 // declaración de ruta estática
@@ -41,6 +42,7 @@ APP.use("/carts", viewsCartRouter);
 APP.use("/products", viewsProductRouter);
 APP.use("/api/products", productRouter);
 APP.use("/api/carts", cartRouter);
+APP.use("/api/sessions", sessionsRouter);
 
 // Método que gestiona las rutas inexistentes.
 APP.use("*", (req, res) => {

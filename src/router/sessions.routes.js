@@ -32,37 +32,37 @@ ROUTER.post("/register", async (req, res) => {
         };
 
         req.session.login = true;
-        res.status(201).send("Usuario creado con exito!");
+        res.status(201).redirect("/admin");
     } catch (error) {
         res.status(500).send("Error interno del servidor", error);
     }
 });
 
 // Ruta para el login
-ROUTER.post("/", async (req, res) => {
+ROUTER.post("/login", async (req, res) => {
     let { email, password } = req.body;
 
     try {
         const usuarioBuscado = await UserModel.findOne({ email: email });
 
-        if(usuarioBuscado) {
-            if(usuarioBuscado.password === password) {
+        if (usuarioBuscado) {
+            if (usuarioBuscado.password === password) {
                 req.session.user = {
                     first_name: usuarioBuscado.first_name,
                     last_name: usuarioBuscado.last_name,
-                    email: usuarioBuscado.email,
+                    email: usuarioBuscado.email
                 };
 
                 req.session.login = true;
-                res.redirect("/admin");
+                return res.redirect("/admin"); // Asegúrate de redirigir aquí
             } else {
-                res.status(401).send("Contraseña incorrecta..");
+                return res.status(401).send("Contraseña incorrecta.");
             }
         } else {
-            res.status(404).send("¡Usuario no encontrado!");
+            return res.status(404).send("¡Usuario no encontrado!");
         }
     } catch (error) {
-        res.status(500).send("Error interno del servidor", error);
+        return res.status(500).send("Error interno del servidor", error);
     }
 });
 
