@@ -73,9 +73,9 @@ const initializePassport = () => {
 
     // Aca desarrollamos la nueva estrategia con github
     passport.use("github", new GitHubStrategy({
-        clientID: "Iv23lizQhc9o6sNhaDyO",
-        clientSecret: "fe905388e30465a56e4fe04cded279269167ad7a",
-        callbackURL: "http://localhost:8080/api/sessions/githubcallback"
+        clientID: process.env.GITHUB_CLIENT_ID,
+        clientSecret: process.env.GITHUB_CLIENT_SECRET,
+        callbackURL: process.env.GITHUB_CALLBACK_URL,
     }, async (accessToken, refreshToken, profile, done) => {
         // Recomendado! Mostrar el perfil por consola para conocer los datos que me llegan.
         console.log("Profile", profile);
@@ -101,9 +101,9 @@ const initializePassport = () => {
 
     // Nueva estrategia con google
     passport.use("google", new GoogleStrategy({
-        clientID: "203335197884-9dcsf4oaabrrfaf3ks1ar95fb43tbd4e.apps.googleusercontent.com",
-        clientSecret: "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",
-        callbackURL: "http://localhost:8080/api/sessions/googlecallback"
+        clientID: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        callbackURL: process.env.GOOGLE_CALLBACK_URL,
     }, async(accessToken, refreshToken, profile, done) => {
         // Recomendado! Mostrar el perfil por consola para conocer los datos que me llegan.
         console.log("Profile Google:", profile);
