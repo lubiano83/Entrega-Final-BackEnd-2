@@ -7,6 +7,8 @@ import UserModel from "../models/user.model.js";
 import { createHash, isValidPassword } from "../utils/bcrypt.js";
 // Trabajamos con GitHub
 import GitHubStrategy from "passport-github2";
+// Nueva estrategia con google
+import GoogleStrategy from "passport-google-oauth20";
 
 const LocalStrategy = local.Strategy;
 
@@ -40,26 +42,26 @@ const initializePassport = () => {
     }));
 
     // agregamos otra estrategia mas, ahora para el login
-    passport.use("login", new LocalStrategy({
-        usernameField: "email"
-    }, async(email, password, done) => {
-        try {
-            // Primero verifico si existe un usuario con ese email
-            const user = await UserModel.findOne({ email });
-            if(!user) {
-                console.log("Este usuario no existe..");
-                return done(null, false);
+    passport.use("login", new LocalStrategy(
+        { usernameField: "email" },
+        async (email, password, done) => {
+            try {
+                const usuario = await UserModel.findOne({ email });
+                if (!usuario) {
+                    return done(null, false, { message: "Usuario no encontrado" });
+                }
+    
+                if (!isValidPassword(password, usuario.password)) {
+                    return done(null, false, { message: "Contraseña incorrecta" });
+                }
+    
+                return done(null, usuario);
+            } catch (error) {
+                return done(error);
             }
-            // Si existe vo a verificar la contraseña
-            if(!isValidPassword(password, user)) {
-                return done(null, false)
-            } 
-            return done(null, user);
-        } catch (error) {
-            return done(error);
         }
-    }));
-
+    ));
+    
     passport.serializeUser((user, done) => {
         done(null, user._id);
     });
@@ -95,7 +97,35 @@ const initializePassport = () => {
         } catch (error) {
             done(error);
         }
-    }))    
+    }));
+
+    // Nueva estrategia con google
+    passport.use("google", new GoogleStrategy({
+        clientID: "203335197884-9dcsf4oaabrrfaf3ks1ar95fb43tbd4e.apps.googleusercontent.com",
+        clientSecret: "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",
+        callbackURL: "http://localhost:8080/api/sessions/googlecallback"
+    }, async(accessToken, refreshToken, profile, done) => {
+        // Recomendado! Mostrar el perfil por consola para conocer los datos que me llegan.
+        console.log("Profile Google:", profile);
+        try {
+            let user = await UserModel.findOne({ email: profile._json.email });
+            if(!user) {
+                let newUser = {
+                    first_name: profile._json.given_name,
+                    last_name: profile._json.family_name,
+                    age: 37,
+                    email: profile._json.email,
+                    password: ""
+                }
+                let result = await UserModel.create(newUser);
+                done(null, result);
+            } else {
+                done(null, user);
+            }
+        } catch (error) {
+            done(error);
+        }
+    }));
 };
 
 export default initializePassport;

@@ -1,59 +1,24 @@
 import { Router } from "express";
 import passport from "passport";
-import UserModel from "../models/user.model.js";
-import { createHash, isValidPassword } from "../utils/bcrypt.js";
-import generateToken from "../utils/jsonwebtoken.js";
 
 const ROUTER = Router();
 
 // Register version para passport
-ROUTER.post("/register", async (req, res) => {
-    const { first_name, last_name, password, email, age } = req.body;
-
-    try {
-        // Verificar si el usuario ya está registrado
-        const existeUsuario = await UserModel.findOne({ email });
-
-        if (existeUsuario) {
-            return res.send("El email ya está registrado");
-        }
-
-        // Si no existe, creamos un nuevo usuario
-        const nuevoUsuario = await UserModel.create({
-            first_name,
-            last_name,
-            email,
-            password: createHash(password), // Encriptar la contraseña
-            age,
-            rol: "usuario", // Asigna un rol por defecto, si es necesario
-        });
-
-        // Generar el token si lo necesitas para algo específico
-        const token = generateToken({
-            first_name: nuevoUsuario.first_name,
-            last_name: nuevoUsuario.last_name,
-            email: nuevoUsuario.email,
-        });
-
-        console.log("Token generado:", token);
-
-        // Guardar los datos del usuario en la sesión
-        req.session.user = {
-            first_name: nuevoUsuario.first_name,
-            last_name: nuevoUsuario.last_name,
-            email: nuevoUsuario.email,
-            age: nuevoUsuario.age,
-            rol: nuevoUsuario.rol || "usuario",  // Si tienes roles, asegúrate de guardarlo
-        };
-
-        req.session.login = true;  // Indicar que el usuario ha iniciado sesión
-
-        // Redirigir al perfil o al área de administración después del registro
-        res.redirect("/admin");  // O /admin dependiendo de tu flujo
-    } catch (error) {
-        console.error("Error en el registro:", error);
-        res.status(500).send("Error en el servidor.");
+ROUTER.post("/register", passport.authenticate("register", {failureRedirect: "/api/sessions/failregister"}), async (req, res) => {
+    
+    if(!req.user) {
+        return res.send("Credenciales invalidas..");
     }
+
+    req.session.user = {
+        first_name: req.user.first_name,
+        last_name: req.user.last_name,
+        age: req.user.age,
+        email: req.user.email
+    }
+
+    req.session.login = true;
+    res.redirect("/admin");
 });
 
 ROUTER.get("/failregister", (req, res) => {
@@ -61,37 +26,25 @@ ROUTER.get("/failregister", (req, res) => {
 });
 
 // Login version para passport
-ROUTER.post("/login", async (req, res) => {
-    const { email, password } = req.body;
-
-    try {
-        const usuario = await UserModel.findOne({ email });
-
-        if (!usuario) {
-            return res.send("Ese usuario no existe.");
-        }
-
-        // Validar la contraseña
-        if (!isValidPassword(password, usuario.password)) {
-            return res.send("Credenciales inválidas!");
-        }
-
-        // Guardar los datos del usuario en la sesión
-        req.session.user = {
-            first_name: usuario.first_name,
-            last_name: usuario.last_name,
-            email: usuario.email,
-            age: usuario.age,
-            rol: usuario.rol || "usuario",
-        };
-
-        req.session.login = true;
-
-        res.redirect("/admin");
-    } catch (error) {
-        console.error("Error en el login:", error);
-        res.status(500).send("Hubo un error en el servidor.");
+ROUTER.post("/login", passport.authenticate("login", { failureRedirect: "/api/sessions/faillogin" }), async (req, res) => {
+    // Si la autenticación es exitosa, req.user estará disponible
+    if (!req.user) {
+        return res.send("Credenciales inválidas.");
     }
+
+    // Guardar la información del usuario en la sesión
+    req.session.user = {
+        first_name: req.user.first_name,
+        last_name: req.user.last_name,
+        age: req.user.age,
+        email: req.user.email,
+        rol: req.user.rol || "usuario",  // Asegúrate de incluir el rol
+    };
+
+    req.session.login = true;  // Indicar que el usuario ha iniciado sesión
+
+    // Redirigir al perfil del usuario
+    res.redirect("/admin");
 });
 
 ROUTER.get("/faillogin", (req, res) => {
@@ -101,7 +54,7 @@ ROUTER.get("/faillogin", (req, res) => {
 // Logout
 ROUTER.get("/logout", (req, res) => {
     try {
-        if (req.session.login) {
+        if(req.session.login) {
             req.session.destroy();
         }
         res.redirect("/");
@@ -119,5 +72,16 @@ ROUTER.get("/githubcallback", passport.authenticate("github", { failureRedirect:
     req.session.login = true;
     res.redirect("/admin");
 });
+
+// Version para Google
+ROUTER.get("/google", passport.authenticate("google", {scope: ["profile", "email"]}), async(req, res) => {
+    // No necesitamos completar nada, porque todo el trabajo lo hace passport
+});
+
+ROUTER.get("/googlecallback", passport.authenticate("google", {failureRedirect: "/login"}), async(req, res) => {
+    req.session.user = req.user;
+    req.session.login = true;
+    res.redirect("/admin");
+})
 
 export default ROUTER;
