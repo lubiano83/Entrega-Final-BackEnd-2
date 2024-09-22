@@ -4,8 +4,8 @@ import passport from "passport";
 const ROUTER = Router();
 
 // Register version para passport
-ROUTER.post("/register", passport.authenticate("register", {failureRedirect: "/api/sessions/failregister"}), async (req, res) => {
-    
+ROUTER.post("/register", passport.authenticate("register", { failureRedirect: "/api/sessions/failregister" }), async (req, res) => {
+
     if(!req.user) {
         return res.send("Credenciales invalidas..");
     }
@@ -16,7 +16,7 @@ ROUTER.post("/register", passport.authenticate("register", {failureRedirect: "/a
         age: req.user.age,
         email: req.user.email,
         rol: req.user.rol || "usuario",
-    }
+    };
 
     req.session.login = true;
     res.redirect("/admin");
@@ -39,12 +39,10 @@ ROUTER.post("/login", passport.authenticate("login", { failureRedirect: "/api/se
         last_name: req.user.last_name,
         age: req.user.age,
         email: req.user.email,
-        rol: req.user.rol || "usuario",  // Asegúrate de incluir el rol
+        rol: req.user.rol || "usuario", // Asegúrate de incluir el rol
     };
 
-    req.session.login = true;  // Indicar que el usuario ha iniciado sesión
-
-    // Redirigir al perfil del usuario
+    req.session.login = true; // Indicar que el usuario ha iniciado sesión
     res.redirect("/admin");
 });
 
@@ -65,7 +63,7 @@ ROUTER.get("/logout", (req, res) => {
 });
 
 // Version para GitHub
-ROUTER.get("/github", passport.authenticate("github", {scope: ["user: email"]}), (req, res) => {});
+ROUTER.get("/github", passport.authenticate("github", { scope: ["user: email"] }), (req, res) => {});
 
 ROUTER.get("/githubcallback", passport.authenticate("github", { failureRedirect: "/login" }), async(req, res) => {
     // La estrategia de github nos retornara el usuario, entonces lo agregamos a nuestro objeto de session.
@@ -75,14 +73,14 @@ ROUTER.get("/githubcallback", passport.authenticate("github", { failureRedirect:
 });
 
 // Version para Google
-ROUTER.get("/google", passport.authenticate("google", {scope: ["profile", "email"]}), async(req, res) => {
+ROUTER.get("/google", passport.authenticate("google", { scope: [ "profile", "email" ] }), async(req, res) => {
     // No necesitamos completar nada, porque todo el trabajo lo hace passport
 });
 
-ROUTER.get("/googlecallback", passport.authenticate("google", {failureRedirect: "/login"}), async(req, res) => {
+ROUTER.get("/googlecallback", passport.authenticate("google", { failureRedirect: "/login" }), async(req, res) => {
     req.session.user = req.user;
     req.session.login = true;
     res.redirect("/admin");
-})
+});
 
 export default ROUTER;
