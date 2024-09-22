@@ -5,6 +5,7 @@ import local, { Strategy } from "passport-local";
 // Traemos UserModel y las funciones de Bcrypt:
 import UserModel from "../models/user.model.js";
 import { createHash, isValidPassword } from "../utils/bcrypt.js";
+// Trabajamos con GitHub
 import GitHubStrategy from "passport-github2";
 
 const LocalStrategy = local.Strategy;
@@ -94,7 +95,7 @@ const initializePassport = () => {
         } catch (error) {
             done(error);
         }
-    }))
+    }))    
 };
 
 export default initializePassport;
