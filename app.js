@@ -16,7 +16,7 @@ const PORT = 8080;
 const HOST = "localhost"; // 127.0.0.1
 const APP = express();
 
-APP.use(express.urlencoded({ extended: true })); // para recibir los datos en urlencoded desde postman
+APP.use(express.urlencoded({ extended: true }));
 APP.use(express.json());
 
 // configuración del motor de plantillas
@@ -24,7 +24,7 @@ handlebars.CONFIG(APP);
 
 // Configuración de sesiones
 APP.use(session({
-    secret: "secretCoder",
+    secret: process.env.SESSION_SECRET || "secretCoder", // Utiliza variable de entorno para mayor seguridad
     resave: true,
     saveUninitialized: true,
     store: MongoStore.create({ mongoUrl: process.env.MONGO_URL, ttl: 100 }),
@@ -51,7 +51,7 @@ APP.use("*", (req, res) => {
 
 // Control de errores internos
 APP.use((error, req, res) => {
-    console.log("Error:", error.message);
+    console.error("Error:", error.message);
     res.status(500).send("<h1>Error 500: Error en el Servidor</h1>");
 });
 
