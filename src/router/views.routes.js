@@ -29,9 +29,9 @@ ROUTER.get("/admin", async (req, res) => {
         const user = req.session.user || null;
 
         // Renderiza la vista pasando el usuario y el título
-        return res.status(200).render("home", { 
-            title: "Home", 
-            user // Pasar el objeto `user` a la vista
+        return res.status(200).render("home", {
+            title: "Home",
+            user, // Pasar el objeto `user` a la vista
         });
     } catch (error) {
         console.log(error.message);

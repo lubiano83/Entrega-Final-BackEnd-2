@@ -11,6 +11,8 @@ import serverSocket from "./src/config/socket.config.js";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 import sessionsRouter from "./src/router/sessions.routes.js";
+import passport from "passport";
+import initializePassport from "./src/config/passport.config.js";
 
 const PORT = 8080;
 const HOST = "localhost"; // 127.0.0.1
@@ -29,6 +31,11 @@ APP.use(session({
     saveUninitialized: true,
     store: MongoStore.create({ mongoUrl: process.env.MONGO_URL, ttl: 100 }),
 }));
+
+// cambios para usar passport
+initializePassport();
+APP.use(passport.initialize());
+APP.use(passport.session());
 
 // declaración de ruta estática
 APP.use("/", express.static(PATH.public));
