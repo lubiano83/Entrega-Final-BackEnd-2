@@ -1,5 +1,7 @@
 import { Router } from "express";
 import passport from "passport";
+import jwt from "jsonwebtoken";
+import { passportCall } from "../utils/util.js";
 
 const ROUTER = Router();
 
@@ -26,28 +28,35 @@ ROUTER.get("/failregister", (req, res) => {
     res.send("¡Fallo el registro de usuario!");
 });
 
-// Login version para passport
+// Login version para jwt
 ROUTER.post("/login", passport.authenticate("login", { failureRedirect: "/api/sessions/faillogin" }), async (req, res) => {
-    // Si la autenticación es exitosa, req.user estará disponible
     if (!req.user) {
-        return res.send("Credenciales inválidas.");
+        return res.status(401).send("Credenciales inválidas.");
     }
 
-    // Guardar la información del usuario en la sesión
-    req.session.user = {
-        first_name: req.user.first_name,
-        last_name: req.user.last_name,
-        age: req.user.age,
-        email: req.user.email,
-        rol: req.user.rol || "usuario", // Asegúrate de incluir el rol
-    };
+    // Generar el token JWT usando la información del usuario
+    const token = jwt.sign(
+        { id: req.user._id, role: req.user.rol, age: req.user.age },
+        "coderhouse", // Clave secreta para firmar el token (guárdala en las variables de entorno)
+        { expiresIn: "1h" }, // El token expira en 1 hora
+    );
 
-    req.session.login = true; // Indicar que el usuario ha iniciado sesión
+    // Enviar el token como una cookie
+    res.cookie("coderCookieToken", token, {
+        httpOnly: true, // Para que no sea accesible desde JavaScript del lado del cliente
+        secure: false, // Solo se envía en solicitudes HTTPS (importante en producción)
+        sameSite: "strict", // Evita que se envíe en solicitudes cross-site
+    });
+
     res.redirect("/admin");
 });
 
 ROUTER.get("/faillogin", (req, res) => {
     res.send("¡Fallo el login de usuario!");
+});
+
+ROUTER.get("/profile", passportCall("jwt"), async (req, res) => {
+    res.send("Bienvenido a tu perfil, " + req.user.first_name);
 });
 
 // Logout

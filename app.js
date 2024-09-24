@@ -13,13 +13,18 @@ import MongoStore from "connect-mongo";
 import sessionsRouter from "./src/router/sessions.routes.js";
 import passport from "passport";
 import initializePassport from "./src/config/passport.config.js";
+import { authorization, passportCall } from "./src/utils/util.js";
+import cookieParser from "cookie-parser";
 
 const PORT = 8080;
-const HOST = "localhost"; // 127.0.0.1
+const HOST = "localhost";
 const APP = express();
 
-APP.use(express.urlencoded({ extended: true }));
+// Middlewares
 APP.use(express.json());
+APP.use(express.urlencoded({ extended: true }));
+APP.use(cookieParser());
+APP.use(passport.initialize());
 
 // configuración del motor de plantillas
 handlebars.CONFIG(APP);
@@ -50,6 +55,11 @@ APP.use("/products", viewsProductRouter);
 APP.use("/api/products", productRouter);
 APP.use("/api/carts", cartRouter);
 APP.use("/api/sessions", sessionsRouter);
+
+//Usamos PassportCall: 
+APP.get("/current", passportCall("jwt"), authorization("admin"), (req, res) => {
+    res.send("¡Bienvenido, Administrador!");
+});
 
 // Método que gestiona las rutas inexistentes.
 APP.use("*", (req, res) => {
