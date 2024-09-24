@@ -38,7 +38,7 @@ ROUTER.post("/login", passport.authenticate("login", { failureRedirect: "/api/se
     const token = jwt.sign(
         { id: req.user._id, role: req.user.rol, age: req.user.age },
         "coderhouse", // Clave secreta para firmar el token (guárdala en las variables de entorno)
-        { expiresIn: "1h" }, // El token expira en 1 hora
+        { expiresIn: "24h" }, // El token expira en 1 hora
     );
 
     // Enviar el token como una cookie
@@ -46,6 +46,7 @@ ROUTER.post("/login", passport.authenticate("login", { failureRedirect: "/api/se
         httpOnly: true, // Para que no sea accesible desde JavaScript del lado del cliente
         secure: false, // Solo se envía en solicitudes HTTPS (importante en producción)
         sameSite: "strict", // Evita que se envíe en solicitudes cross-site
+        maxAge: 60*60*1000,
     });
 
     res.redirect("/admin");

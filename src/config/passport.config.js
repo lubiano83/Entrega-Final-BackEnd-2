@@ -5,6 +5,7 @@ import { createHash, isValidPassword } from "../utils/bcrypt.js";
 import GitHubStrategy from "passport-github2";
 import GoogleStrategy from "passport-google-oauth20";
 import jwt from "passport-jwt";
+// import FacebookStrategy from "passport-facebook";
 
 const LocalStrategy = local.Strategy;
 const JWTStrategy = jwt.Strategy;
@@ -147,6 +148,34 @@ const initializePassport = () => {
             done(error);
         }
     }));
+
+    // passport.use(new FacebookStrategy({
+    //     clientID: "tusdatos",
+    //     clientSecret: "tusdatos",
+    //     callbackURL: "http://localhost:8080/auth/facebook/callback",
+    // }, async (accessToken, refreshToken, profile, done) => {
+    //     console.log(profile);
+    //     const user = await UsuarioModel.findOne({
+    //         accountId: profile.id,
+    //         provider: "Facebook",
+    //     });
+
+    //     if(!user) {
+    //         console.log("Agregando un nuevo usuario a la Base de Datos");
+
+    //         const newUser = new UsuarioModel({
+    //             first_name: profile.displayName,
+    //             accountId: profile.id,
+    //             provider: "Facebook",
+    //         });
+
+    //         await newUser.save();
+    //         return done(null, profile);
+    //     } else {
+    //         console.log("El usuario ya existe");
+    //         return done(null, profile);
+    //     }
+    // }));
 };
 
 export default initializePassport;
