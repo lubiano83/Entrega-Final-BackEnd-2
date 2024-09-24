@@ -1,7 +1,7 @@
 import { Router } from "express";
 import passport from "passport";
 import jwt from "jsonwebtoken";
-import { passportCall } from "../utils/util.js";
+import { authorization, passportCall } from "../utils/util.js";
 
 const ROUTER = Router();
 
@@ -56,6 +56,10 @@ ROUTER.get("/faillogin", (req, res) => {
 });
 
 ROUTER.get("/profile", passportCall("jwt"), async (req, res) => {
+    console.log("User in profile:", req.user); // Verifica qué usuario está siendo retornado
+    if (!req.user) {
+        return res.status(401).send("No autorizado.");
+    }
     res.send("Bienvenido a tu perfil, " + req.user.first_name);
 });
 
