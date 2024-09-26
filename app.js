@@ -8,9 +8,7 @@ import viewsRouter from "./src/router/views.routes.js";
 import PATH from "./src/utils/path.js";
 import handlebars from "./src/config/handlebars.config.js";
 import serverSocket from "./src/config/socket.config.js";
-import session from "express-session";
-import MongoStore from "connect-mongo";
-import sessionsRouter from "./src/router/sessions.routes.js";
+import usersRouter from "./src/router/sessions.routes.js";
 import passport from "passport";
 import initializePassport from "./src/config/passport.config.js";
 import cookieParser from "cookie-parser";
@@ -24,28 +22,17 @@ APP.use(express.json());
 APP.use(express.urlencoded({ extended: true }));
 APP.use(cookieParser());
 APP.use(passport.initialize());
+initializePassport();
 
 // configuración del motor de plantillas
 handlebars.CONFIG(APP);
-
-// Configuración de sesiones
-APP.use(session({
-    secret: process.env.SESSION_SECRET || "secretCoder", // Utiliza variable de entorno para mayor seguridad
-    resave: true,
-    saveUninitialized: true,
-    store: MongoStore.create({ mongoUrl: process.env.MONGO_URL, ttl: 100 }),
-}));
-
-// cambios para usar passport
-initializePassport();
-APP.use(passport.initialize());
-APP.use(passport.session());
 
 // declaración de ruta estática
 APP.use("/", express.static(PATH.public));
 APP.use("/products", express.static(PATH.public));
 APP.use("/carts", express.static(PATH.public));
 APP.use("/realTimeProducts", express.static(PATH.public));
+APP.use("/api/sessions", express.static(PATH.public));
 
 // Declaración de enrutadores
 APP.use("/", viewsRouter);
@@ -53,7 +40,7 @@ APP.use("/carts", viewsCartRouter);
 APP.use("/products", viewsProductRouter);
 APP.use("/api/products", productRouter);
 APP.use("/api/carts", cartRouter);
-APP.use("/api/sessions", sessionsRouter);
+APP.use("/api/sessions", usersRouter);
 
 // Método que gestiona las rutas inexistentes.
 APP.use("*", (req, res) => {

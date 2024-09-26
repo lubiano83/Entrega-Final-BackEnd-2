@@ -1,29 +1,6 @@
-import passport from "passport";
+import bcrypt from "bcrypt";
 
-const passportCall = (strategy) => {
-    return async (req, res, next) => {
-        passport.authenticate(strategy, (error, user, info) => {
-            if(error) {
-                return next(error);
-            }
+const createHash = (password) => bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+const isValidPassword = (password, user) => bcrypt.compareSync(password, user.password);
 
-            if(!user) {
-                res.status(401).send({ error: info.message ? info.message : info.toString() });
-            }
-
-            req.user = user;
-            next();
-        })(req, res, next);
-    };
-};
-
-const authorization = (role) => {
-    return async (req, res, next) => {
-        if(req.user.role !== role) {
-            return res.status(403).send("No tenes permiso para esta seccion..");
-        }
-        next();
-    };
-};
-
-export { passportCall, authorization };
+export { createHash, isValidPassword };
