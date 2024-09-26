@@ -92,4 +92,14 @@ ROUTER.get("/current", passport.authenticate("current", { session: false }), (re
     res.render("home", { usuario: req.user });
 });
 
+// Version para GitHub
+ROUTER.get("/github", passport.authenticate("github", {scope: ["user: email"]}), (req, res) => {});
+
+ROUTER.get("/githubcallback", passport.authenticate("github", { failureRedirect: "/login" }), async(req, res) => {
+    // La estrategia de github nos retornara el usuario, entonces lo agregamos a nuestro objeto de session.
+    req.session.user = req.user;
+    req.session.login = true;
+    res.redirect("/profile");
+});
+
 export default ROUTER;

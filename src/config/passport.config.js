@@ -1,10 +1,5 @@
-//Implementamos la estrategia de Passport con JWT: 
-
-//Importamos passport y jwt: 
-
 import passport from "passport";
 import jwt from "passport-jwt";
-//Guarda! Cuidado con lo que importan. 
 
 const JWTStrategy = jwt.Strategy;
 const ExtractJwt = jwt.ExtractJwt;
