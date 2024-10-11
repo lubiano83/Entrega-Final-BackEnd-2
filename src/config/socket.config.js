@@ -1,9 +1,7 @@
 /* Servidor */
 import { Server } from "socket.io";
-import ProductController from "../controllers/product.controller.js";
 import ProductService from "../services/product.service.js";
 
-const productController = new ProductController();
 const productService = new ProductService();
 
 const CONFIG = (serverHTTP) => {
@@ -24,7 +22,7 @@ const CONFIG = (serverHTTP) => {
             console.log(product);
             try {
                 await productController.addProduct({ ...product });
-                socket.emit("products", await productController.getProducts());
+                socket.emit("products", await productService.getProducts());
             } catch (error) {
                 console.error("Error al agregar producto:", error);
                 socket.emit("productsError", { message: "Error al agregar producto" });
@@ -34,8 +32,8 @@ const CONFIG = (serverHTTP) => {
         socket.on("delete-product", async (id) => {
             console.log(id);
             try {
-                await productController.deleteProductById(id);
-                const updatedProducts = await productController.getProducts();
+                await productService.deleteProductById(id);
+                const updatedProducts = await productService.getProducts();
                 socket.emit("products", updatedProducts);
             } catch (error) {
                 console.error("Error al eliminar producto:", error);
@@ -43,11 +41,10 @@ const CONFIG = (serverHTTP) => {
             }
         });
 
-        socket.on("toggle-availability", async (id) => {
-            console.log(id);
+        socket.on("toggle-availability", async (productId) => {
             try {
-                await productController.toggleAvailability(id);
-                const updatedProducts = await productController.getProducts();
+                await productService.toggleAvailability(productId);
+                const updatedProducts = await productService.getProducts();
                 socket.emit("products", updatedProducts);
             } catch (error) {
                 console.error("Error al cambiar disponibilidad:", error);
