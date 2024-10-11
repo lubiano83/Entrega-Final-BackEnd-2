@@ -1,12 +1,12 @@
 import { Router } from "express";
-import CartManager from "../controllers/CartManager.js";
+import CartController from "../controllers/cart.controller.js";
 
 const ROUTER = Router();
-const CART = new CartManager();
+const cartController = new CartController();
 
 ROUTER.get("/", async (req, res) => {
     try {
-        const allCarts = await CART.getCarts();
+        const allCarts = await cartController.getCarts();
         if (!allCarts) {
             return res.status(404).send("<h1>Carritos no encontrados</h1>");
         }
@@ -20,7 +20,7 @@ ROUTER.get("/", async (req, res) => {
 ROUTER.get("/:id", async (req, res) => {
     try {
         const ID = req.params.id;
-        const cart = await CART.getCartById(ID);
+        const cart = await cartController.getCartById(ID);
         if (!cart) {
             return res.status(404).send("<h1>Carrito no encontrado</h1>");
         }
@@ -34,7 +34,7 @@ ROUTER.get("/:id", async (req, res) => {
 ROUTER.post("/:id/clear", async (req, res) => {
     try {
         const ID = req.params.id;
-        const result = await CART.clearCart(ID); // Usa el método clearCart
+        const result = await cartController.clearCart(ID); // Usa el método clearCart
         if (result === false) {
             return res.status(404).send("<h1>Carrito no encontrado</h1>");
         } else if (result === "Error al eliminar los productos del carrito") {

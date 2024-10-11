@@ -1,21 +1,14 @@
 import CartModel from "../models/cart.model.js";
-import ProductManager from "./ProductManager.js";
+import ProductController from "./product.controller.js";
 import mongoDB from "../config/mongoose.config.js";
 
-const PRODUCT = new ProductManager();
+const productController = new ProductController();
 
-export default class CartManager {
-    #itemModel;
-
-    // Constructor
-    constructor() {
-        this.#itemModel = CartModel;
-    }
-
+export default class CartController {
     // Funciones públicas
     addCart = async () => {
         try {
-            const cart = new this.#itemModel({ products: [] });
+            const cart = new CartModel({ products: [] });
             await cart.save();
             return "Carrito Agregado";
         } catch (error) {
@@ -29,7 +22,7 @@ export default class CartManager {
             return "ID no válido";
         }
         try {
-            const respuesta = await this.#itemModel.findById(id);
+            const respuesta = await CartModel.findById(id);
             if(!respuesta){
                 return "Not found";
             } else {
@@ -46,8 +39,8 @@ export default class CartManager {
             return "ID no válido";
         }
         try {
-            const cart = await this.#itemModel.findById(cartId);
-            const product = await PRODUCT.getProductById(productId);
+            const cart = await CartModel.findById(cartId);
+            const product = await productController.getProductById(productId);
 
             if (!cart) {
                 return "Carrito no encontrado";
@@ -79,7 +72,7 @@ export default class CartManager {
         }
 
         try {
-            const cart = await this.#itemModel.findById(cartId);
+            const cart = await CartModel.findById(cartId);
 
             if (!cart) {
                 return "Carrito no encontrado";
@@ -107,7 +100,7 @@ export default class CartManager {
         }
 
         try {
-            const cart = await this.#itemModel.findById(cartId);
+            const cart = await CartModel.findById(cartId);
 
             if (!cart) {
                 return "Carrito no encontrado";
@@ -134,13 +127,13 @@ export default class CartManager {
             return "ID no válido";
         }
         try {
-            const cart = await this.#itemModel.findById(id);
+            const cart = await CartModel.findById(id);
 
             if (!cart) {
                 return "Carrito no encontrado";
             }
 
-            await this.#itemModel.findByIdAndDelete(id);
+            await CartModel.findByIdAndDelete(id);
             return "Carrito Eliminado";
         } catch (error) {
             console.log(error.message);
@@ -153,14 +146,14 @@ export default class CartManager {
             return null;
         }
 
-        const productId = await this.#itemModel.findById(id);
+        const productId = await CartModel.findById(id);
 
         if(productId !== id) {
             return "Ese Id no existe";
         }
 
         try {
-            const updatedCart = await this.#itemModel.findByIdAndUpdate(id, updateData, { new: true });
+            const updatedCart = await CartModel.findByIdAndUpdate(id, updateData, { new: true });
             if (updatedCart) {
                 return updatedCart; // Devuelve el carrito actualizado en lugar de un mensaje de texto
             } else {
@@ -177,7 +170,7 @@ export default class CartManager {
             return false;
         }
         try {
-            const cart = await this.#itemModel.findById(cartId);
+            const cart = await CartModel.findById(cartId);
             if (!cart) {
                 return false;
             }
@@ -191,7 +184,7 @@ export default class CartManager {
 
     getCarts = async () => {
         try {
-            return await this.#itemModel.find().populate("products").lean();
+            return await CartModel.find().populate("products").lean();
         } catch (error) {
             console.log(error.message);
             return "Hubo un error al obtener los carritos";

@@ -1,14 +1,14 @@
 import { Router } from "express";
-import ProductManager from "../controllers/ProductManager.js";
-import CartManager from "../controllers/CartManager.js";
+import ProductController from "../controllers/product.controller.js";
+import CartController from "../controllers/cart.controller.js";
 
 const ROUTER = Router();
-const PRODUCT = new ProductManager();
-const CART = new CartManager();
+const productController = new ProductController();
+const cartController = new CartController();
 
 ROUTER.get("/", async (req, res) => {
     try {
-        const allProducts = await PRODUCT.getProducts(req.query);
+        const allProducts = await productController.getProducts(req.query);
         return res.status(200).render("products", { title: "Products", products: allProducts });
     } catch (error) {
         res.status(500).send(error.message);
@@ -19,7 +19,7 @@ ROUTER.get("/", async (req, res) => {
 ROUTER.get("/:id", async (req, res) => {
     try {
         const ID = req.params.id;
-        const product = await PRODUCT.getProductById(ID);
+        const product = await productController.getProductById(ID);
         if (!product) {
             return res.status(404).send("<h1>Producto no encontrado</h1>");
         }
@@ -33,19 +33,19 @@ ROUTER.get("/:id", async (req, res) => {
 ROUTER.post("/:id/add-to-cart", async (req, res) => {
     try {
         const productId = req.params.id;
-        const carts = await CART.getCarts();
+        const carts = await cartController.getCarts();
 
         if (carts.length === 0) {
-            await CART.addCart();
-            const carts = await CART.getCarts();
+            await cartController.addCart();
+            const carts = await cartController.getCarts();
             const firstCartId = carts[0]._id;
-            await CART.addProductToCart(firstCartId, productId);
+            await cartController.addProductToCart(firstCartId, productId);
             return res.redirect(`/carts/${firstCartId}`);
         }
 
         const firstCartId = carts[0]._id;
         console.log(firstCartId);
-        const result = await CART.addProductToCart(firstCartId, productId);
+        const result = await cartController.addProductToCart(firstCartId, productId);
 
         if (result === "Producto no encontrado") {
             return res.status(404).json({ status: false, message: result });

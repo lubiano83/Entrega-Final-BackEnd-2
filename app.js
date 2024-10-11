@@ -1,14 +1,14 @@
 import express from "express";
 import mongoDB from "./src/config/mongoose.config.js";
-import productRouter from "./src/router/api.product.routes.js";
-import viewsProductRouter from "./src/router/app.product.routes.js";
-import cartRouter from "./src/router/api.cart.routes.js";
-import viewsCartRouter from "./src/router/app.cart.routes.js";
-import viewsRouter from "./src/router/views.routes.js";
+import productRouter from "./src/routes/api.product.router.js";
+import viewsProductRouter from "./src/routes/app.product.router.js";
+import cartRouter from "./src/routes/api.cart.router.js";
+import viewsCartRouter from "./src/routes/app.cart.router.js";
+import viewsRouter from "./src/routes/views.router.js";
 import PATH from "./src/utils/path.js";
 import handlebars from "./src/config/handlebars.config.js";
 import serverSocket from "./src/config/socket.config.js";
-import usersRouter from "./src/router/sessions.routes.js";
+import userRouter from "./src/routes/user.router.js";
 import passport from "passport";
 import initializePassport from "./src/config/passport.config.js";
 import cookieParser from "cookie-parser";
@@ -40,7 +40,7 @@ APP.use("/carts", viewsCartRouter);
 APP.use("/products", viewsProductRouter);
 APP.use("/api/products", productRouter);
 APP.use("/api/carts", cartRouter);
-APP.use("/api/sessions", usersRouter);
+APP.use("/api/sessions", userRouter);
 
 // Método que gestiona las rutas inexistentes.
 APP.use("*", (req, res) => {

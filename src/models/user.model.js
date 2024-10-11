@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
 
 const usuarioSchema = new mongoose.Schema({
-    first_name: {
+    firstName: {
         type: String,
         required: true,
     },
-    last_name: {
+    lastName: {
         type: String,
         required: true,
     },
@@ -33,5 +33,5 @@ const usuarioSchema = new mongoose.Schema({
     },
 });
 
-const UsuarioModel = mongoose.model("usuarios", usuarioSchema);
+const UsuarioModel = mongoose.model("users", usuarioSchema);
 export default UsuarioModel;
