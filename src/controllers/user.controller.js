@@ -24,7 +24,7 @@ class UserController {
             await userService.registerUser(updatedData);
             res.redirect("/");
         } catch (error) {
-            res.status(500).json({ message: error.message, error });
+            respuesta(res, 500, "Error al registrar un usuario..");
         }
     };
 
@@ -41,7 +41,7 @@ class UserController {
             res.cookie("coderCookieToken", token, { maxAge: 3600000, httpOnly: true });
             res.redirect("/api/sessions/current");
         } catch (error) {
-            res.status(500).json({ message: error.message, error });
+            respuesta(res, 500, "Error al hacer login de usuario..");
         }
     };
 

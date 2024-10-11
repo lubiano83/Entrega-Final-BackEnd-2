@@ -31,8 +31,7 @@ export default class ProductController {
             const newProduct = await productService.addProduct(productData);
             return res.status(201).json({ status: true, payload: newProduct });
         } catch (error) {
-            console.log(error.message);
-            return res.status(500).json({ status: false, message: "Hubo un error al agregar el producto" });
+            respuesta(res, 500, "Hubo un error al agregar el producto..");
         }
     };
 
@@ -43,8 +42,7 @@ export default class ProductController {
 
             return res.status(200).json(products);
         } catch (error) {
-            console.error("Error al obtener productos:", error.message);
-            return res.status(500).json({ message: "Hubo un error al obtener los productos" });
+            respuesta(res, 500, "Hubo un error al obtener los productos..");
         }
     }
 
@@ -58,8 +56,7 @@ export default class ProductController {
             }
             res.status(200).json({ status: true, payload: product });
         } catch (error) {
-            console.log(error.message);
-            res.status(500).json({ status: false, message: "Hubo un error al obtener el producto" });
+            respuesta(res, 500, "Hubo un error al obtener el producto por el id..");
         }
     };
 
@@ -70,8 +67,7 @@ export default class ProductController {
             const product = await productService.deleteProductById(id);
             res.status(200).json({ status: true, payload: product });
         } catch (error) {
-            console.log(error.message);
-            res.status(500).json({ status: false, message: "Hubo un error al eliminar el producto" });
+            respuesta(res, 500, "Hubo un error al eliminar el producto por el id..");
         }
     };
 
@@ -88,8 +84,7 @@ export default class ProductController {
             }
             res.status(200).json({ status: true, payload: updatedProduct, message: "Producto Modificado" });
         } catch (error) {
-            console.log(error.message);
-            res.status(500).json({ status: false, message: "Hubo un error al actualizar el producto" });
+            respuesta(res, 500, "Hubo un error al actualizar el producto..");
         }
     };
 
@@ -100,8 +95,7 @@ export default class ProductController {
             const product = await productService.toggleAvailability(id);
             res.status(200).json({ status: true, payload: product });
         } catch (error) {
-            console.log(error.message);
-            return "Hubo un error al cambiar la disponibilidad del producto";
+            respuesta(res, 500, "Hubo un error al cambiar la disponibilidad del producto..");
         }
     };
 }
