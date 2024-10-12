@@ -1,12 +1,11 @@
-<section class="products__table">
-  <h1 class="titulo">Home</h1>
+<section class="products__table flex flex-col justify-center items-center py-8 gap-4">
+  <h1 class="titulo text-2xl font-bold underline">Home</h1>
   <div class="home__categories">
-    <a href="http://localhost:8080/realtimeproducts/" target="_blank"><button>RTP</button></a>
-    <a href="http://localhost:8080/products/" target="_blank"><button>Products</button></a>
-    <a href="http://localhost:8080/carts/" target="_blank"><button>Carts</button></a>
-    <a href="http://localhost:8080/explain" target="_blank"><button>Explain</button></a>
-    <a href="/profile"><button>Profile</button></a>
+    <a href="http://localhost:8080/realtimeproducts/" target="_blank"><button class="border-2 border-white rounded-xl py-1 px-2 bg-gray-600">RTP</button></a>
+    <a href="http://localhost:8080/products/" target="_blank"><button class="border-2 border-white rounded-xl py-1 px-2 bg-gray-600">Products</button></a>
+    <a href="http://localhost:8080/carts/" target="_blank"><button class="border-2 border-white rounded-xl py-1 px-2 bg-gray-600">Carts</button></a>
+    <a href="http://localhost:8080/explain" target="_blank"><button class="border-2 border-white rounded-xl py-1 px-2 bg-gray-600">Explain</button></a>
+    <a href="/profile"><button class="border-2 border-white rounded-xl py-1 px-2 bg-gray-600">Profile</button></a>
   </div>
-  <br>
-  <h3>Bienvenido, {{usuario.first_name}} {{usuario.last_name}}</h3>
+  <h3>Bienvenido, {{usuario.firstName}} {{usuario.lastName}}</h3>
 </section>
