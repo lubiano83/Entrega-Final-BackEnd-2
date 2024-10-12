@@ -12,7 +12,7 @@ const CONFIG = (serverHTTP) => {
 
         try {
             const products = await productService.getProducts();
-            socket.emit("products", products);
+            socket.emit("products", products.docs);
         } catch (error) {
             console.error("Error al obtener productos:", error);
             socket.emit("productsError", { message: "Error al obtener productos" });

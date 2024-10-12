@@ -1,11 +1,11 @@
 <section class="products__table">
   <h1 class="titulo">Products</h1>
   <div class="table__categories">
-    {{#each products.productsFound.docs}}
+    {{#each products.docs}}
       {{#if this.available}}
       <article class="categories__item">
         <div class="item__foto">
-          <div><a href={{this.thumbnail.[0]}} target="_blank"><img class="thumbnail" src={{this.thumbnail.[0]}} alt={{this.thumbnail.[0]}}></a></div>
+          <div><a href="{{this.thumbnail.[0]}}" target="_blank"><img class="thumbnail" src="{{this.thumbnail.[0]}}" alt="{{this.thumbnail.[0]}}"></a></div>
         </div>
         <div class="item__texto">
           <div class="id">Id: {{this._id}}</div>
@@ -22,20 +22,31 @@
       {{/if}}
     {{/each}}
   </div>
-    <div>
-      {{#if products.productsFound.prevPage}}
-      <a href="/products?page={{products.productsFound.prevPage}}{{#if product.productsFound.sort}}&sort={{products.productsFound.sort}}{{/if}}{{#if products.productsFound.limit}}&limit={{products.productsFound.limit}}{{/if}}">Anterior</a>
-      {{/if}}
-      {{#if products.productsFound.nextPage}}
-      <a href="/products?page={{products.productsFound.nextPage}}{{#if product.productsFound.sort}}&sort={{products.productsFound.sort}}{{/if}}{{#if products.productsFound.limit}}&limit={{products.productsFound.limit}}{{/if}}">Siguiente</a>
-      {{/if}}
-    </div>
-    <div>
-      <a href="/products?page={{products.productsFound.page}}{{#if limit}}&limit={{limit}}{{/if}}&sort=asc">Ascendente</a>
-      <a href="/products?page={{products.productsFound.page}}{{#if limit}}&limit={{limit}}{{/if}}&sort=desc">Descendente</a>
-    </div>
-    <div class="listadoInfoProducts">
-        <a href="/products?page={{products.productsFound.page}}{{#if limit}}&limit={{limit}}{{/if}}">Reset</a>
-        <p><span>Página {{products.productsFound.page}} de {{products.productsFound.totalPages}}</span>, <span>{{products.productsFound.totalDocs}} Documentos</span> y <span>{{products.skip}} Omitidos</span></p>
-    </div>
+
+  <!-- Paginación -->
+  <div>
+    {{#if products.prevPage}}
+    <a href="/products?page={{products.prevPage}}{{#if products.sort}}&sort={{products.sort}}{{/if}}{{#if products.limit}}&limit={{products.limit}}{{/if}}">Anterior</a>
+    {{/if}}
+
+    {{#if products.nextPage}}
+    <a href="/products?page={{products.nextPage}}{{#if products.sort}}&sort={{products.sort}}{{/if}}{{#if products.limit}}&limit={{products.limit}}{{/if}}">Siguiente</a>
+    {{/if}}
+  </div>
+
+  <!-- Ordenación -->
+  <div>
+    <a href="/products?page={{products.page}}{{#if products.limit}}&limit={{products.limit}}{{/if}}&sort=asc">Ascendente</a>
+    <a href="/products?page={{products.page}}{{#if products.limit}}&limit={{products.limit}}{{/if}}&sort=desc">Descendente</a>
+  </div>
+
+  <!-- Información de la página -->
+  <div class="listadoInfoProducts">
+    <a href="/products?page={{products.page}}{{#if products.limit}}&limit={{products.limit}}{{/if}}">Reset</a>
+    <p>
+      <span>Página {{products.page}} de {{products.totalPages}}</span>, 
+      <span>{{products.totalDocs}} Documentos</span> y 
+      <span>{{products.skip}} Omitidos</span>
+    </p>
+  </div>
 </section>

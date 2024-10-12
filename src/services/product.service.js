@@ -24,33 +24,28 @@ class ProductService {
 
             const filters = $and.length > 0 ? { $and } : {};
 
-            // Si no hay filtros, devuelve todos los productos
-            if (Object.keys(filters).length === 0) {
-                return await ProductModel.find({}).lean(); // Devuelve todos los productos
-            }
-
             // Manejo de ordenamiento
             let sort = {};
-            if (paramFilters.sort && (paramFilters.sort === "asc" || paramFilters.sort === "desc")) {
-                sort = { price: paramFilters.sort === "desc" ? -1 : 1 };
+            if (paramFilters.sort) {
+                sort.price = paramFilters.sort === "asc" ? 1 : -1; // Ascendente o descendente por precio
             }
 
             // Configuración de paginación
-            const defaultLimit = 10;
-            const defaultPage = 1;
+            const limit = paramFilters.limit ? parseInt(paramFilters.limit) : 10; // Limite por defecto
+            const page = paramFilters.page ? parseInt(paramFilters.page) : 1; // Página por defecto
 
-            const skip = (paramFilters.page ? (parseInt(paramFilters.page) - 1) : (defaultPage - 1)) * (paramFilters.limit ? parseInt(paramFilters.limit) : defaultLimit);
-
-            const paginationOptions = {
-                limit: paramFilters.limit ? parseInt(paramFilters.limit) : defaultLimit,
-                page: paramFilters.page ? parseInt(paramFilters.page) : defaultPage,
-                sort: sort,
-                skip: skip,
-                lean: true,
-            };
+            // Calcular el número de documentos a saltar
+            const skip = (page - 1) * limit;
 
             // Obtener productos con paginación
-            const productsFound = await ProductModel.paginate(filters, paginationOptions);
+            const productsFound = await ProductModel.paginate(filters, {
+                limit: limit,
+                page: page,
+                sort: sort,
+                lean: true,
+                pagination: true,
+                offset: skip, // Usa offset si tu método lo requiere
+            });
 
             // Eliminar el campo 'id' de cada producto en los resultados
             productsFound.docs = productsFound.docs.map(({ id, ...productWithoutId }) => productWithoutId);

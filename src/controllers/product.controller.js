@@ -98,4 +98,28 @@ export default class ProductController {
             respuesta(res, 500, "Hubo un error al cambiar la disponibilidad del producto..");
         }
     };
+
+    appGetProduct = async(req, res) => {
+        const paramFilters = req.query;
+        try {
+            const allProducts = await productService.getProducts(paramFilters);
+            return res.status(200).render("products", { title: "Products", products: allProducts });
+        } catch (error) {
+            respuesta(res, 500, "Hubo un error al obtener los productos..");
+        }
+    };
+
+    appGetProductById = async (req, res) => {
+        const { id } = req.params;
+
+        try {
+            const product = await productService.getProductById(id);
+            if (!product) {
+                return res.status(404).json({ status: false, message: "Producto no encontrado" });
+            }
+            return res.status(200).render("productDetail", { title: "Product Detail", product: product });
+        } catch (error) {
+            respuesta(res, 500, "Hubo un error al obtener el producto por el id..");
+        }
+    };
 }
