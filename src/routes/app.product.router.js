@@ -6,7 +6,7 @@ const ROUTER = Router();
 const productController = new ProductController();
 const cartController = new CartController();
 
-ROUTER.get("/", productController.appGetProduct);
+ROUTER.get("/", productController.appGetProducts);
 ROUTER.get("/:id", productController.appGetProductById);
 
 ROUTER.post("/:id/add-to-cart", async (req, res) => {

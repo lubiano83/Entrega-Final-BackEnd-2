@@ -21,8 +21,9 @@ const CONFIG = (serverHTTP) => {
         socket.on("add-product", async (product) => {
             console.log(product);
             try {
-                await productController.addProduct({ ...product });
-                socket.emit("products", await productService.getProducts());
+                await productService.addProduct({ ...product });
+                const products = await productService.getProducts();
+                socket.emit("products", products.docs);
             } catch (error) {
                 console.error("Error al agregar producto:", error);
                 socket.emit("productsError", { message: "Error al agregar producto" });
@@ -34,7 +35,7 @@ const CONFIG = (serverHTTP) => {
             try {
                 await productService.deleteProductById(id);
                 const updatedProducts = await productService.getProducts();
-                socket.emit("products", updatedProducts);
+                socket.emit("products", updatedProducts.docs);
             } catch (error) {
                 console.error("Error al eliminar producto:", error);
                 socket.emit("productsError", { message: "Error al eliminar producto" });
@@ -45,7 +46,8 @@ const CONFIG = (serverHTTP) => {
             try {
                 await productService.toggleAvailability(productId);
                 const updatedProducts = await productService.getProducts();
-                socket.emit("products", updatedProducts);
+
+                serverIo.emit("products", updatedProducts.docs); // Cambia esto para emitir a todos
             } catch (error) {
                 console.error("Error al cambiar disponibilidad:", error);
                 socket.emit("productsError", { message: "Error al cambiar disponibilidad" });

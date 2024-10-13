@@ -153,8 +153,44 @@ export default class CartController {
                 updatedCart: cart,
             });
         } catch (error) {
-            console.error(error.message);
-            return res.status(500).json({ message: "Hubo un error al limpiar el carrito." });
+            respuesta(res, 500, "Hubo un error al limpiar el carrito..");
+        }
+    };
+
+    appGetCarts = async(req, res) => {
+        try {
+            const carts = await cartService.getCarts();
+            res.status(200).render("carts", { title: "Carts", carts });
+        } catch (error) {
+            respuesta(res, 500, "Hubo un error al obtener los carritos..");
+        }
+    };
+
+    appGetCartById = async(req, res) => {
+        const { id } = req.params;
+        try {
+            const cart = await cartService.getCartById(id);
+            if (!cart) {
+                return res.status(404).send("<h1>Carrito no encontrado</h1>");
+            }
+            res.status(200).render("cartDetail", { title: "Cart Detail", cart: cart });
+        } catch (error) {
+            respuesta(res, 500, "Hubo un error al obtener el carrito..");
+        }
+    };
+
+    appClearCart = async(req, res) => {
+        const { id } = req.params;
+        try {
+            const result = await cartService.clearCart(id);
+            if (result === false) {
+                return res.status(404).send("<h1>Carrito no encontrado</h1>");
+            } else if (result === "Error al eliminar los productos del carrito") {
+                return res.status(500).send("<h1>Error al eliminar los productos del carrito</h1>");
+            }
+            res.status(200).redirect(`/carts/${id}`);
+        } catch (error) {
+            respuesta(res, 500, "Hubo un error al limpiar el carrito..");
         }
     };
 }

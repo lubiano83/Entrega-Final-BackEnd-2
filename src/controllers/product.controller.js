@@ -1,6 +1,8 @@
 import ProductService from "../services/product.service.js";
+import CartService from "../services/cart.service.js";
 
 const productService = new ProductService();
+const cartService = new CartService();
 
 export default class ProductController {
     // Funciones públicas
@@ -99,7 +101,7 @@ export default class ProductController {
         }
     };
 
-    appGetProduct = async(req, res) => {
+    appGetProducts = async(req, res) => {
         const paramFilters = req.query;
         try {
             const allProducts = await productService.getProducts(paramFilters);
