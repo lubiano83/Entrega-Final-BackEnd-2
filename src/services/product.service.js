@@ -109,6 +109,15 @@ class ProductService {
             throw new Error("Hubo un error al cambiar la disponibilidad del producto");
         }
     };
+
+    explain = async() => {
+        try {
+            const result = await ProductModel.find({ $and: [{ category: "BATERIA" }, { title: "55457" }] }).explain();
+            return result;
+        } catch (error) {
+            throw new Error("Hubo un error al obtener los datos..");
+        }
+    };
 }
 
 export default ProductService;

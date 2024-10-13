@@ -91,7 +91,7 @@ class CartService {
                 return "Producto agregado";
             }
         } catch (error) {
-            throw new Error("Error al agregar el producto al carrito..");
+            throw new Error("Error al agregar el producto al carrito: " + error.message);
         }
     };
 

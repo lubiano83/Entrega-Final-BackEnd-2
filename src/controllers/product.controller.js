@@ -1,11 +1,14 @@
 import ProductService from "../services/product.service.js";
 import CartService from "../services/cart.service.js";
+import UserService from "../services/user.service.js";
+import { respuesta } from "../utils/reutilizable.js";
 
 const productService = new ProductService();
 const cartService = new CartService();
+const userService = new UserService();
 
 export default class ProductController {
-    // Funciones públicas
+
     addProduct = async (req, res) => {
         const { category, title, description, price, thumbnail = [], code, stock } = req.body;
 
@@ -122,6 +125,35 @@ export default class ProductController {
             return res.status(200).render("productDetail", { title: "Product Detail", product: product });
         } catch (error) {
             respuesta(res, 500, "Hubo un error al obtener el producto por el id..");
+        }
+    };
+
+    appAddProductToCart = async (req, res) => {
+        const { id: productId } = req.params;
+        try {
+            const cartId = await userService.getCartId();
+            const product = await cartService.addProductToCart(cartId, productId);
+            respuesta(res, 200, product);
+        } catch (error) {
+            respuesta(res, 500, "Hubo un error al agregar el producto al carrito: " + error.message);
+        }
+    };
+
+    explain = async(req, res) => {
+        try {
+            const result = await productService.explain();
+            res.status(200).json({ status: true, payload: result.executionStats });
+        } catch (error) {
+            respuesta(res, 500, "Hubo un error al obtener los datos..");
+        }
+    };
+
+    realTimeProducts = async(req, res) => {
+        try {
+            return res.status(200).render("realTimeProducts", { title: "realTimeProducts" });
+        } catch (error) {
+            console.log(error.message);
+            res.status(500).json({ status: false, message: "Hubo un error en el servidor" });
         }
     };
 }

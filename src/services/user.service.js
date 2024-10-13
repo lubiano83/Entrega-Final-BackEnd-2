@@ -2,6 +2,7 @@ import UserModel from "../models/user.model.js";
 import CartModel from "../models/cart.model.js";
 import { isValidPassword } from "../utils/bcrypt.js";
 import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
 
 class UserService {
 
@@ -50,6 +51,24 @@ class UserService {
             return token;
         } catch (error) {
             throw new Error("Error al ingresar un usuario..", error);
+        }
+    };
+
+    getCartId = async () => {
+        try {
+            const user = await UserModel.findOne();
+            if (!user || !user.cart) {
+                throw new Error("Usuario no encontrado o no tiene carrito asignado.");
+            }
+
+            const cartId = user.cart.toString();
+            if (!mongoose.Types.ObjectId.isValid(cartId)) {
+                return "ID no válido";
+            }
+
+            return cartId;
+        } catch (error) {
+            throw new Error("Error al obtener el id del carrito: " + error.message);
         }
     };
 }

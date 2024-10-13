@@ -58,6 +58,24 @@ class UserController {
 
         res.render("home", { usuario: req.user });
     };
+
+    renderLogin = (req, res) => {
+        if (req.cookies.coderCookieToken) {
+            return res.redirect("/api/sessions/current");
+        }
+        res.render("login");
+    };
+
+    renderRegister = (req, res) => {
+        if (req.cookies.coderCookieToken) {
+            return res.redirect("/api/sessions/current");
+        }
+        res.render("register");
+    };
+
+    renderProfile = (req, res) => {
+        res.render("profile", { user: req.user });
+    };
 }
 
 export default UserController;
