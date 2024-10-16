@@ -1,4 +1,3 @@
-import ProductModel from "../models/product.model.js";
 import mongoDB from "../config/mongoose.config.js";
 import ProductDao from "../dao/product.dao.js";
 
@@ -76,12 +75,12 @@ class ProductService {
         }
     };
 
-    updateProduct = async (id, updateData) => {
+    updateProduct = async (id, productData) => {
         if (!mongoDB.isValidId(id)) {
             return null;
         }
         try {
-            const updatedProduct = await ProductModel.findByIdAndUpdate(id, updateData, { new: true });
+            const updatedProduct = await ProductDao.findByIdAndUpdate(id, productData);
             return updatedProduct;
         } catch (error) {
             throw new Error("Hubo un error al actualizar el producto");
@@ -93,7 +92,7 @@ class ProductService {
             return null;
         }
         try {
-            const product = await ProductModel.findById(id);
+            const product = await ProductDao.findById(id);
             if (product) {
                 product.available = !product.available;
                 await product.save();
@@ -108,8 +107,8 @@ class ProductService {
 
     explain = async() => {
         try {
-            const result = await ProductModel.find({ $and: [{ category: "BATERIA" }, { title: "55457" }] }).explain();
-            return result;
+            const filters = { $and: [{ category: "BATERIA" }, { title: "55457" }] };
+            return await ProductDao.explain(filters);
         } catch (error) {
             throw new Error("Hubo un error al obtener los datos..");
         }

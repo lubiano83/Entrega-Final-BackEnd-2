@@ -18,7 +18,8 @@ export default class ProductController {
 
         try {
             const products = await productService.getProducts();
-            const sameCode = products.find((product) => product.code === code);
+
+            const sameCode = products.docs.find((product) => product.code === code);
             if (sameCode){
                 return res.status(400).json({ status: false, message: "El código ya existe" });
             }
@@ -36,6 +37,7 @@ export default class ProductController {
             const newProduct = await productService.addProduct(productData);
             return res.status(201).json({ status: true, payload: newProduct });
         } catch (error) {
+            console.error("Error al agregar producto:", error);
             respuesta(res, 500, "Hubo un error al agregar el producto..");
         }
     };
@@ -139,12 +141,12 @@ export default class ProductController {
         }
     };
 
-    explain = async(req, res) => {
+    explain = async (req, res) => {
         try {
             const result = await productService.explain();
             res.status(200).json({ status: true, payload: result.executionStats });
         } catch (error) {
-            respuesta(res, 500, "Hubo un error al obtener los datos..");
+            res.status(500).json({ status: false, message: "Hubo un error al obtener los datos.." });
         }
     };
 
