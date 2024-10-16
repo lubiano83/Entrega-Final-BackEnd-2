@@ -1,7 +1,5 @@
-import CartModel from "../models/cart.model.js";
 import CartDao from "../dao/cart.dao.js";
 import ProductDao from "../dao/product.dao.js";
-import mongoDB from "../config/mongoose.config.js";
 
 class CartService {
     getCarts = async() => {

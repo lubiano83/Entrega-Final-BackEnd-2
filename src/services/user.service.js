@@ -1,6 +1,5 @@
 import { isValidPassword } from "../utils/bcrypt.js";
 import jwt from "jsonwebtoken";
-import mongoose from "mongoose";
 import UserDao from "../dao/user.dao.js";
 import CartDao from "../dao/cart.dao.js";
 
@@ -60,10 +59,6 @@ class UserService {
             }
 
             const cartId = user.cart.toString();
-            if (!mongoose.Types.ObjectId.isValid(cartId)) {
-                return "ID no válido";
-            }
-
             return cartId;
         } catch (error) {
             throw new Error("Error al obtener el id del carrito: " + error.message);
