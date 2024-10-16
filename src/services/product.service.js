@@ -1,12 +1,12 @@
 import ProductModel from "../models/product.model.js";
 import mongoDB from "../config/mongoose.config.js";
+import ProductDao from "../dao/product.dao.js";
 
 class ProductService {
 
     addProduct = async(productData) => {
         try {
-            const product = new ProductModel(productData);
-            return await product.save();
+            return await ProductDao.save(productData);
         } catch (error) {
             throw new Error("Error al agregar un producto..");
         }
@@ -34,17 +34,13 @@ class ProductService {
             const limit = paramFilters.limit ? parseInt(paramFilters.limit) : 10; // Limite por defecto
             const page = paramFilters.page ? parseInt(paramFilters.page) : 1; // Página por defecto
 
-            // Calcular el número de documentos a saltar
-            const skip = (page - 1) * limit;
-
             // Obtener productos con paginación
-            const productsFound = await ProductModel.paginate(filters, {
+            const productsFound = await ProductDao.paginate(filters, {
                 limit: limit,
                 page: page,
                 sort: sort,
                 lean: true,
                 pagination: true,
-                offset: skip, // Usa offset si tu método lo requiere
             });
 
             // Eliminar el campo 'id' de cada producto en los resultados
@@ -61,7 +57,7 @@ class ProductService {
             return null;
         }
         try {
-            const product = await ProductModel.findById(id);
+            const product = await ProductDao.findById(id);
             return product;
         } catch (error) {
             throw new Error("Hubo un error al obtener el producto por el id.");
@@ -73,7 +69,7 @@ class ProductService {
             return null;
         }
         try {
-            await ProductModel.findByIdAndDelete(id);
+            await ProductDao.delete(id);
             return "Producto Eliminado";
         } catch (error) {
             throw new Error("Hubo un error al eliminar el producto");
