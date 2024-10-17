@@ -16,6 +16,24 @@ class ProductRepository {
     async deleteProduct(id) {
         return await ProductDao.delete(id);
     }
+
+    async paginate(filters, { limit, page, sort }) {
+        return await ProductDao.paginate(filters, {
+            limit: limit,
+            page: page,
+            sort: sort,
+            lean: true,
+            pagination: true,
+        });
+    }
+
+    async getProductById(productId) {
+        return await ProductDao.findById(productId);
+    }
+
+    async explain(filters) {
+        return await ProductDao.explain(filters);
+    }
 }
 
 export default ProductRepository;

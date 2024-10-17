@@ -1,10 +1,16 @@
-import CartDao from "../dao/cart.dao.js";
-import ProductDao from "../dao/product.dao.js";
+import CartRepository from "../repositories/cart.repository.js";
+import ProductRepository from "../repositories/product.repository.js";
 
 class CartService {
+
+    constructor() {
+        this.cartRepository = new CartRepository();
+        this.productRepository = new ProductRepository();
+    }
+
     getCarts = async() => {
         try {
-            const carts = await CartDao.find();
+            const carts = await this.cartRepository.getCarts();
             return carts;
         } catch (error) {
             throw new Error("Error al obtener los carritos..");
@@ -13,7 +19,7 @@ class CartService {
 
     addCart = async() => {
         try {
-            return await CartDao.save({ products: [] });
+            return await this.cartRepository.createCart({ products: [] });
         } catch (error) {
             throw new Error("Error al agregar un carrito..");
         }
@@ -21,7 +27,7 @@ class CartService {
 
     getCartById = async(id) => {
         try {
-            const cart = await CartDao.findById(id);
+            const cart = await this.cartRepository.getCartById(id);
             return cart;
         } catch (error) {
             throw new Error("Error al obtener el carrito..");
@@ -30,7 +36,7 @@ class CartService {
 
     deleteCartById = async(id) => {
         try {
-            return await CartDao.delete(id);
+            return await this.cartRepository.deleteCart(id);
         } catch (error) {
             throw new Error("Error al eliminar el carrito..");
         }
@@ -38,13 +44,13 @@ class CartService {
 
     updateCart = async (id, updateData) => {
         try {
-            const cart = await CartDao.findById(id);
+            const cart = await this.cartRepository.getCartById(id);
             if (!cart) {
                 return "Ese Id no existe";
             }
 
             cart.products = updateData.products;
-            const updatedCart = await CartDao.update(id, cart);
+            const updatedCart = await this.cartRepository.updateCart(id, cart);
 
             return updatedCart;
         } catch (error) {
@@ -54,12 +60,12 @@ class CartService {
 
     addProductToCart = async (cartId, productId) => {
         try {
-            const cart = await CartDao.findById(cartId);
+            const cart = await this.cartRepository.getCartById(cartId);
             if (!cart) {
                 throw new Error("Carrito no encontrado");
             }
 
-            const product = await ProductDao.findById(productId);
+            const product = await this.productRepository.getProductById(productId);
             if (!product) {
                 throw new Error("Producto no encontrado");
             }
@@ -72,7 +78,7 @@ class CartService {
                 cart.products.push({ id: product._id, quantity: 1 });
             }
 
-            await CartDao.update(cartId, cart);
+            await this.cartRepository.updateCart(cartId, cart);
             return productInCart ? "Cantidad incrementada" : "Producto agregado";
         } catch (error) {
             throw new Error("Error al agregar el producto al carrito: " + error.message);
@@ -81,7 +87,7 @@ class CartService {
 
     deleteProductFromCart = async (cartId, productId) => {
         try {
-            const cart = await CartDao.findById(cartId);
+            const cart = await this.cartRepository.getCartById(cartId);
             if (!cart) {
                 return "Carrito no encontrado";
             }
@@ -90,7 +96,7 @@ class CartService {
 
             if (productIndex !== -1) {
                 cart.products.splice(productIndex, 1);
-                return await CartDao.update(cartId, cart);
+                return await this.cartRepository.updateCart(cartId, cart);
             } else {
                 return "Producto no encontrado en el carrito";
             }
@@ -101,7 +107,7 @@ class CartService {
 
     updateCartQuantity = async (cartId, productId, quantity) => {
         try {
-            const cart = await CartDao.findById(cartId);
+            const cart = await this.cartRepository.getCartById(cartId);
 
             if (!cart) {
                 return "Carrito no encontrado";
@@ -111,7 +117,7 @@ class CartService {
 
             if (productIndex !== -1) {
                 cart.products[productIndex].quantity = quantity;
-                return await CartDao.update(cartId, cart);
+                return await this.cartRepository.updateCart(cartId, cart);
             } else {
                 return "Producto no encontrado en el carrito";
             }
@@ -122,12 +128,12 @@ class CartService {
 
     clearCart = async (cartId) => {
         try {
-            const cart = await CartDao.findById(cartId);
+            const cart = await this.cartRepository.getCartById(cartId);
             if (!cart) {
                 return false;
             }
             cart.products = [];
-            return await CartDao.update(cartId, cart);
+            return await this.cartRepository.updateCart(cartId, cart);
         } catch (error) {
             throw new Error("Error al limpiar el carrito..");
         }

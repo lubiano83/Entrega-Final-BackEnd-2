@@ -16,6 +16,14 @@ class CartRepository {
     async deleteCart(id) {
         return await CartDao.delete(id);
     }
+
+    async getCarts() {
+        return await CartDao.find();
+    }
+
+    async getCartById(cartId) {
+        return await CartDao.findById(cartId);
+    }
 }
 
 export default CartRepository;

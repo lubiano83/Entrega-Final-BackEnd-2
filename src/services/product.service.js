@@ -1,16 +1,14 @@
-import mongoDB from "../config/mongoose.config.js";
-import ProductDao from "../dao/product.dao.js";
 import ProductRepository from "../repositories/product.repository.js";
 
 class ProductService {
 
     constructor() {
-        this.userRepository = new ProductRepository();
+        this.productRepository = new ProductRepository();
     }
 
     addProduct = async(productData) => {
         try {
-            return await this.userRepository.createProduct(productData);
+            return await this.productRepository.createProduct(productData);
         } catch (error) {
             throw new Error("Error al agregar un producto..");
         }
@@ -39,7 +37,7 @@ class ProductService {
             const page = paramFilters.page ? parseInt(paramFilters.page) : 1; // Página por defecto
 
             // Obtener productos con paginación
-            const productsFound = await ProductDao.paginate(filters, {
+            const productsFound = await this.productRepository.paginate(filters, {
                 limit: limit,
                 page: page,
                 sort: sort,
@@ -57,11 +55,8 @@ class ProductService {
     }
 
     getProductById = async (id) => {
-        if (!mongoDB.isValidId(id)) {
-            return null;
-        }
         try {
-            const product = await ProductDao.findById(id);
+            const product = await this.productRepository.getProductById(id);
             return product;
         } catch (error) {
             throw new Error("Hubo un error al obtener el producto por el id.");
@@ -69,11 +64,8 @@ class ProductService {
     };
 
     deleteProductById = async (id) => {
-        if (!mongoDB.isValidId(id)) {
-            return null;
-        }
         try {
-            await ProductDao.delete(id);
+            await this.productRepository.deleteProduct(id);
             return "Producto Eliminado";
         } catch (error) {
             throw new Error("Hubo un error al eliminar el producto");
@@ -81,11 +73,8 @@ class ProductService {
     };
 
     updateProduct = async (id, productData) => {
-        if (!mongoDB.isValidId(id)) {
-            return null;
-        }
         try {
-            const updatedProduct = await ProductDao.findByIdAndUpdate(id, productData);
+            const updatedProduct = await this.productRepository.updateProduct(id, productData);
             return updatedProduct;
         } catch (error) {
             throw new Error("Hubo un error al actualizar el producto");
@@ -93,11 +82,8 @@ class ProductService {
     };
 
     toggleAvailability = async (id) => {
-        if (!mongoDB.isValidId(id)) {
-            return null;
-        }
         try {
-            const product = await ProductDao.findById(id);
+            const product = await this.productRepository.getProductById(id);
             if (product) {
                 product.available = !product.available;
                 await product.save();
@@ -110,10 +96,10 @@ class ProductService {
         }
     };
 
-    explain = async() => {
+    explain = async () => {
         try {
             const filters = { $and: [{ category: "BATERIA" }, { title: "55457" }] };
-            return await ProductDao.explain(filters);
+            return await this.productRepository.explain(filters);
         } catch (error) {
             throw new Error("Hubo un error al obtener los datos..");
         }
