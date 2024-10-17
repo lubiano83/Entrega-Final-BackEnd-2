@@ -1,11 +1,16 @@
 import mongoDB from "../config/mongoose.config.js";
 import ProductDao from "../dao/product.dao.js";
+import ProductRepository from "../repositories/product.repository.js";
 
 class ProductService {
 
+    constructor() {
+        this.userRepository = new ProductRepository();
+    }
+
     addProduct = async(productData) => {
         try {
-            return await ProductDao.save(productData);
+            return await this.userRepository.createProduct(productData);
         } catch (error) {
             throw new Error("Error al agregar un producto..");
         }

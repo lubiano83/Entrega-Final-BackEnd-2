@@ -1,18 +1,21 @@
 import { isValidPassword } from "../utils/bcrypt.js";
 import jwt from "jsonwebtoken";
-import UserDao from "../dao/user.dao.js";
+import UserRepository from "../repositories/user.repository.js";
 import CartDao from "../dao/cart.dao.js";
 
 class UserService {
+    constructor() {
+        this.userRepository = new UserRepository();
+    }
 
-    registerUser = async(userData) => {
+    async registerUser(userData) {
         const { email } = userData;
 
         try {
-            const existingUser = await UserDao.findOne({ email });
+            const existingUser = await this.userRepository.findUserByEmail(email);
             console.log(existingUser);
 
-            if(existingUser) {
+            if (existingUser) {
                 return "El usuario ya existe..";
             }
 
@@ -23,17 +26,17 @@ class UserService {
                 cart: newCart._id,
             };
 
-            return await UserDao.save(updatedData);
+            return await this.userRepository.createUser(updatedData);
         } catch (error) {
-            throw new Error("Error al registrar un usuario..", error);
+            throw new Error("Error al registrar un usuario: " + error.message);
         }
-    };
+    }
 
-    loginUser = async(userData) => {
+    async loginUser(userData) {
         const { email, password } = userData;
 
         try {
-            const user = await UserDao.findOne({ email });
+            const user = await this.userRepository.findUserByEmail(email);
             if (!user) {
                 return "El usuario no existe..";
             }
@@ -43,17 +46,21 @@ class UserService {
                 return "Contraseña incorrecta..";
             }
 
-            const token = jwt.sign({ email: user.email, firstName: user.firstName, lastName: user.lastName, age: user.age, role: user.role, cart: user.cart }, "coderhouse", { expiresIn: "1h" });
+            const token = jwt.sign(
+                { email: user.email, firstName: user.firstName, lastName: user.lastName, age: user.age, role: user.role, cart: user.cart },
+                "coderhouse",
+                { expiresIn: "1h" },
+            );
 
             return token;
         } catch (error) {
-            throw new Error("Error al ingresar un usuario..", error);
+            throw new Error("Error al ingresar un usuario: " + error.message);
         }
-    };
+    }
 
-    getCartId = async () => {
+    async getCartId(userId) {
         try {
-            const user = await UserDao.findOne();
+            const user = await this.userRepository.getUserById(userId);
             if (!user || !user.cart) {
                 throw new Error("Usuario no encontrado o no tiene carrito asignado.");
             }
@@ -63,7 +70,7 @@ class UserService {
         } catch (error) {
             throw new Error("Error al obtener el id del carrito: " + error.message);
         }
-    };
+    }
 }
 
 export default UserService;
