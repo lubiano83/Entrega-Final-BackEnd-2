@@ -12,10 +12,13 @@ import userRouter from "./src/routes/user.router.js";
 import passport from "passport";
 import initializePassport from "./src/config/passport.config.js";
 import cookieParser from "cookie-parser";
+import { soloAdmin, soloUser } from "./src/middlewares/auth.middleware.js";
 
+// Variables
 const PORT = 8080;
 const HOST = "localhost";
 const APP = express();
+const permissions = passport.authenticate("current", { session: false });
 
 // Middlewares
 APP.use(express.json());
@@ -36,10 +39,10 @@ APP.use("/api/sessions", express.static(PATH.public));
 
 // Declaración de enrutadores
 APP.use("/", viewsRouter);
-APP.use("/carts", viewsCartRouter);
-APP.use("/products", viewsProductRouter);
-APP.use("/api/products", productRouter);
-APP.use("/api/carts", cartRouter);
+APP.use("/carts", permissions, soloUser, viewsCartRouter);
+APP.use("/products", permissions, soloUser, viewsProductRouter);
+APP.use("/api/products", permissions, soloAdmin, productRouter);
+APP.use("/api/carts", permissions, soloAdmin, cartRouter);
 APP.use("/api/sessions", userRouter);
 
 // Método que gestiona las rutas inexistentes.

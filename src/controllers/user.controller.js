@@ -52,9 +52,9 @@ class UserController {
 
     currentUser = (req, res) => {
 
-        if(req.user.role !== "admin") {
-            return res.redirect("/profile");
-        }
+        // if(req.user.role !== "admin") {
+        //     return res.redirect("/profile");
+        // }
 
         res.render("home", { usuario: req.user });
     };
