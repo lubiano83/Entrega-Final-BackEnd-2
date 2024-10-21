@@ -13,6 +13,10 @@
             <form action="/carts/{{this._id}}/clear" method="POST">
               <button type="submit">Limpiar</button>
             </form>
+            <br>
+            <form action="/carts/{{this._id}}/purchase" method="POST">
+              <button type="submit">Proceder con la Compra</button>
+            </form>
       {{/if}}
     {{/each}}
   </div>

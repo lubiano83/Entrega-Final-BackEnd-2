@@ -73,13 +73,22 @@ class CartService {
             const productInCart = cart.products.find((p) => p.id._id.toString() === productId.toString());
 
             if (productInCart) {
-                productInCart.quantity += 1;
+                if (productInCart.quantity < product.stock) {
+                    productInCart.quantity += 1;
+                    await this.cartRepository.updateCart(cartId, cart);
+                    return "Cantidad incrementada";
+                } else {
+                    throw new Error("No se puede agregar más productos. Stock máximo alcanzado.");
+                }
             } else {
-                cart.products.push({ id: product._id, quantity: 1 });
+                if (product.stock > 0) {
+                    cart.products.push({ id: product._id, quantity: 1 });
+                    await this.cartRepository.updateCart(cartId, cart);
+                    return "Producto agregado";
+                } else {
+                    throw new Error("No hay stock disponible para agregar el producto.");
+                }
             }
-
-            await this.cartRepository.updateCart(cartId, cart);
-            return productInCart ? "Cantidad incrementada" : "Producto agregado";
         } catch (error) {
             throw new Error("Error al agregar el producto al carrito: " + error.message);
         }

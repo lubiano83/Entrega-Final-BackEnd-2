@@ -1,7 +1,9 @@
 import CartService from "../services/cart.service.js";
+import ProductService from "../services/product.service.js";
 import { respuesta } from "../utils/reutilizable.js";
 
 const cartService = new CartService();
+const productService = new ProductService();
 
 export default class CartController {
 
@@ -192,6 +194,45 @@ export default class CartController {
             res.status(200).redirect(`/carts/${id}`);
         } catch (error) {
             respuesta(res, 500, "Hubo un error al limpiar el carrito..");
+        }
+    };
+
+    completePurchase = async (req, res) => {
+        const cartId = req.user.cart;
+        try {
+            const cart = await cartService.getCartById(cartId);
+            if (!cart || cart.products.length === 0) {
+                return res.status(400).json({ message: "El carrito está vacío o no existe." });
+            }
+
+            let total = 0;
+            for (const product of cart.products) {
+                total += product.price * product.quantity;
+
+                const stockToUpdate = product.id.stock - product.quantity;
+
+                if (stockToUpdate < 0) {
+                    return res.status(400).json({ message: "Stock insuficiente para completar la compra." });
+                }
+
+                const productData = { stock: stockToUpdate };
+                await productService.updateProduct(product.id._id, productData);
+            }
+
+            const clearedCart = await cartService.clearCart(cartId);
+            if (!clearedCart) {
+                return res.status(500).json({ message: "Error al vaciar el carrito después de la compra." });
+            }
+
+            return res.status(200).json({
+                message: "Compra completada con éxito",
+                totalAmount: total,
+                cart: clearedCart,
+            });
+
+        } catch (error) {
+            console.error("Error en completePurchase:", error);
+            return res.status(500).json({ message: "Hubo un error al completar la compra." });
         }
     };
 }

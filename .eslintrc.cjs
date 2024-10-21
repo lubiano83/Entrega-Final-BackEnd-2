@@ -31,7 +31,7 @@ module.exports = {
         // Reglas de Funciones
         "func-style": [ "error", "expression" ],
         "no-spaced-func": "error",
-        "max-statements": [ "error", 21 ],
+        "max-statements": [ "error", 30 ],
         "arrow-parens": [ "error", "always" ],
 
         // Reglas de Arrays

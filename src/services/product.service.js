@@ -18,7 +18,6 @@ class ProductService {
         try {
             const $and = [];
 
-            // Construir filtros
             if (paramFilters.category) $and.push({ category: paramFilters.category });
             if (paramFilters.title) $and.push({ title: paramFilters.title });
             if (paramFilters.code) $and.push({ code: paramFilters.code });
@@ -26,17 +25,14 @@ class ProductService {
 
             const filters = $and.length > 0 ? { $and } : {};
 
-            // Manejo de ordenamiento
             let sort = {};
             if (paramFilters.sort) {
-                sort.price = paramFilters.sort === "asc" ? 1 : -1; // Ascendente o descendente por precio
+                sort.price = paramFilters.sort === "asc" ? 1 : -1;
             }
 
-            // Configuración de paginación
-            const limit = paramFilters.limit ? parseInt(paramFilters.limit) : 10; // Limite por defecto
-            const page = paramFilters.page ? parseInt(paramFilters.page) : 1; // Página por defecto
+            const limit = paramFilters.limit ? parseInt(paramFilters.limit) : 10;
+            const page = paramFilters.page ? parseInt(paramFilters.page) : 1;
 
-            // Obtener productos con paginación
             const productsFound = await this.productRepository.paginate(filters, {
                 limit: limit,
                 page: page,
@@ -45,9 +41,7 @@ class ProductService {
                 pagination: true,
             });
 
-            // Eliminar el campo 'id' de cada producto en los resultados
             productsFound.docs = productsFound.docs.map(({ id, ...productWithoutId }) => productWithoutId);
-
             return productsFound;
         } catch (error) {
             throw new Error("Hubo un error al obtener los productos..");

@@ -44,7 +44,6 @@ export default class ProductController {
         try {
             const paramFilters = req.query;
             const products = await productService.getProducts(paramFilters);
-
             return res.status(200).json(products);
         } catch (error) {
             respuesta(res, 500, "Hubo un error al obtener los productos..");
@@ -133,8 +132,8 @@ export default class ProductController {
         const cartId = req.user.cart;
 
         try {
-            const product = await cartService.addProductToCart(cartId, productId);
-            respuesta(res, 200, product);
+            await cartService.addProductToCart(cartId, productId);
+            res.status(200);
         } catch (error) {
             respuesta(res, 500, "Hubo un error al agregar el producto al carrito: " + error.message);
         }
