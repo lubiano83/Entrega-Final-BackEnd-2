@@ -57,20 +57,6 @@ class UserService {
             throw new Error("Error al ingresar un usuario: " + error.message);
         }
     }
-
-    async getCartId(userId) {
-        try {
-            const user = await this.userRepository.getUserById(userId);
-            if (!user || !user.cart) {
-                throw new Error("Usuario no encontrado o no tiene carrito asignado.");
-            }
-
-            const cartId = user.cart.toString();
-            return cartId;
-        } catch (error) {
-            throw new Error("Error al obtener el id del carrito: " + error.message);
-        }
-    }
 }
 
 export default UserService;

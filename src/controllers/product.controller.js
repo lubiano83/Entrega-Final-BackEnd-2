@@ -1,11 +1,9 @@
 import ProductService from "../services/product.service.js";
 import CartService from "../services/cart.service.js";
-import UserService from "../services/user.service.js";
 import { respuesta } from "../utils/reutilizable.js";
 
 const productService = new ProductService();
 const cartService = new CartService();
-const userService = new UserService();
 
 export default class ProductController {
 
@@ -132,8 +130,9 @@ export default class ProductController {
 
     appAddProductToCart = async (req, res) => {
         const { id: productId } = req.params;
+        const cartId = req.user.cart;
+
         try {
-            const cartId = await userService.getCartId();
             const product = await cartService.addProductToCart(cartId, productId);
             respuesta(res, 200, product);
         } catch (error) {
