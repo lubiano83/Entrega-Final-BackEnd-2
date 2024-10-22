@@ -1,5 +1,6 @@
 import CartService from "../services/cart.service.js";
 import ProductService from "../services/product.service.js";
+import TickeModel from "../models/ticket.model.js";
 import { respuesta } from "../utils/reutilizable.js";
 
 const cartService = new CartService();
@@ -198,7 +199,9 @@ export default class CartController {
     };
 
     completePurchase = async (req, res) => {
+        console.log(req.user);
         const cartId = req.user.cart;
+        const userId = req.user.id;
         try {
             const cart = await cartService.getCartById(cartId);
             if (!cart || cart.products.length === 0) {
@@ -206,17 +209,29 @@ export default class CartController {
             }
 
             let total = 0;
+            const productsPartialSold = [];
+
             for (const product of cart.products) {
-                total += product.price * product.quantity;
+                const stockAvailable = product.id.stock;
+                const quantityRequested = product.quantity;
 
-                const stockToUpdate = product.id.stock - product.quantity;
+                if (quantityRequested > stockAvailable) {
+                    total += product.id.price * stockAvailable;
 
-                if (stockToUpdate < 0) {
-                    return res.status(400).json({ message: "Stock insuficiente para completar la compra." });
+                    productsPartialSold.push({
+                        productId: product.id._id,
+                        title: product.id.title,
+                        requestedQuantity: quantityRequested,
+                        soldQuantity: stockAvailable,
+                        remainingQuantity: quantityRequested - stockAvailable,
+                    });
+
+                    await productService.updateProduct(product.id._id, { stock: 0 });
+                } else {
+                    total += product.id.price * quantityRequested;
+                    const stockToUpdate = stockAvailable - quantityRequested;
+                    await productService.updateProduct(product.id._id, { stock: stockToUpdate });
                 }
-
-                const productData = { stock: stockToUpdate };
-                await productService.updateProduct(product.id._id, productData);
             }
 
             const clearedCart = await cartService.clearCart(cartId);
@@ -224,10 +239,19 @@ export default class CartController {
                 return res.status(500).json({ message: "Error al vaciar el carrito después de la compra." });
             }
 
+            const ticket = new TickeModel({
+                amount: total,
+                purchaser: userId,
+            });
+
+            await ticket.save();
+
             return res.status(200).json({
                 message: "Compra completada con éxito",
                 totalAmount: total,
+                partiallySoldProducts: productsPartialSold,
                 cart: clearedCart,
+                ticket,
             });
 
         } catch (error) {

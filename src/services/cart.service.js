@@ -73,13 +73,9 @@ class CartService {
             const productInCart = cart.products.find((p) => p.id._id.toString() === productId.toString());
 
             if (productInCart) {
-                if (productInCart.quantity < product.stock) {
-                    productInCart.quantity += 1;
-                    await this.cartRepository.updateCart(cartId, cart);
-                    return "Cantidad incrementada";
-                } else {
-                    throw new Error("No se puede agregar más productos. Stock máximo alcanzado.");
-                }
+                productInCart.quantity += 1;
+                await this.cartRepository.updateCart(cartId, cart);
+                return "Cantidad incrementada";
             } else {
                 if (product.stock > 0) {
                     cart.products.push({ id: product._id, quantity: 1 });

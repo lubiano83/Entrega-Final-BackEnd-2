@@ -47,7 +47,7 @@ class UserService {
             }
 
             const token = jwt.sign(
-                { email: user.email, firstName: user.firstName, lastName: user.lastName, age: user.age, role: user.role, cart: user.cart },
+                { email: user.email, firstName: user.firstName, lastName: user.lastName, age: user.age, role: user.role, cart: user.cart, id: user._id.toString() },
                 "coderhouse",
                 { expiresIn: "1h" },
             );
