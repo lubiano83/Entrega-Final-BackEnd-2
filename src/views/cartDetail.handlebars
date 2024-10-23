@@ -1,22 +1,28 @@
-<section class="products__table">
-  <h1 class="titulo">Cart Detail</h1>
-  <div class="table__categories">
+<section class="flex flex-col justify-start items-center py-8 gap-8">
+  <h1 class="text-2xl font-bold underline">Cart Detail</h1>
+  <div class="flex flex-col gap-4">
     {{#each cart}}
       {{#if this._id}}
-          <div class="item__texto">
-            <div class="id">Cart Id: {{this._id}}</div>
+        <div>
+          <div class="id">Cart Id: {{this._id}}</div>
+          <div class="gap-4 py-2 flex justify-center items-center">
             {{#each products}}
               <div class="price">Product Id: {{this.id._id}}</div>
               <div class="price">Quantity: {{this.quantity}}</div>
             {{/each}}
           </div>
+        </div>
+          <div class="flex justify-center items-center gap-2">
+            <a href="/carts">
+              <button class="border-2 border-white rounded-xl py-1 px-2 bg-gray-600">Volver</button>
+            </a>
             <form action="/carts/{{this._id}}/clear" method="POST">
-              <button type="submit">Limpiar</button>
+              <button type="submit" class="border-2 border-white rounded-xl py-1 px-2 bg-gray-600">Limpiar</button>
             </form>
-            <br>
-            <form action="/carts/{{this._id}}/purchase" method="POST">
-              <button type="submit">Proceder con la Compra</button>
-            </form>
+          </div>
+          <form action="/carts/{{this._id}}/purchase" method="POST" class="flex justify-center items-center">
+            <button type="submit" class="border-2 border-white rounded-xl py-1 px-2 bg-gray-600">Comprar</button>
+          </form>
       {{/if}}
     {{/each}}
   </div>

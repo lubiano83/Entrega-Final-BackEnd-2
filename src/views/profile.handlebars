@@ -1,12 +1,19 @@
-<h1>Mi Perfil</h1>
-
-<p>Bienvenido: {{user.firstName}} {{user.lastName}}</p>
-<p>Email: {{user.email}}</p>
-<p>Edad: {{user.age}}</p>
-
-<a href="/api/sessions/current">
-    <button>Volver</button>
-</a>
-<form action="/api/sessions/logout" method="POST" style="display: inline;">
-    <button type="submit">Logout</button>
-</form>
+<div class="flex flex-col justify-start items-center py-8 gap-4">
+    <h1 class="text-2xl font-bold underline">Mi Perfil</h1>
+    <div class="text-left flex flex-col gap-2">
+        <p>Id: {{user.id}}</p>
+        <p>Nombre: {{usuario.fullName}}</p>
+        <p>Email: {{user.email}}</p>
+        <p>Cart: {{user.cart}}</p>
+        <p>Role: {{user.role}}</p>
+        <p>Edad: {{user.age}}</p>
+    </div>
+    <div class="flex justify-center items-center gap-2">
+        <a href="/api/sessions/current">
+            <button class="border-2 border-white rounded-xl py-1 px-2 bg-gray-600">Volver</button>
+        </a>
+        <form action="/api/sessions/logout" method="POST" style="display: inline;">
+            <button type="submit" class="border-2 border-white rounded-xl py-1 px-2 bg-gray-600">Logout</button>
+        </form>
+    </div>
+</div>

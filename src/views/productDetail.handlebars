@@ -1,26 +1,33 @@
-<section class="products__table">
-  <h1 class="titulo">Product Detail</h1>
-  <div class="table__categories">
+<section class="flex flex-col justify-center items-center py-8 gap-8">
+  <h1 class="text-2xl font-bold underline">Product Detail</h1>
+  <div class="flex flex-col justify-center items-center gap-8">
     {{#if product.available}}
-      <div class="item__foto">
-        <div>
-          <a href="{{product.thumbnail.[0]}}" target="_blank">
-            <img class="thumbnail" src="{{product.thumbnail.[0]}}" alt="{{product.title}}">
-          </a>
+      <div class="flex justify-center items-center gap-2">
+        <div class="item__foto">
+          <div>
+            <a href="{{product.thumbnail.[0]}}" target="_blank">
+              <img class="w-72 aspect-square bg-white" src="{{product.thumbnail.[0]}}" alt="{{product.title}}">
+            </a>
+          </div>
+        </div>
+        <div class="flex flex-col justify-center items-left leading-[3]">
+          <div class="id">Id: {{product._id}}</div>
+          <div class="code">Code: {{product.code}}</div>
+          <div class="category">Category: {{product.category}}</div>
+          <div class="title">Title: {{product.title}}</div>
+          <div class="price">Price: {{product.price}}</div>
+          <div class="stock">Stock: {{product.stock}}</div>
         </div>
       </div>
-      <div class="item__texto">
-        <div class="id">Id: {{product._id}}</div>
-        <div class="code">Code: {{product.code}}</div>
-        <div class="category">Category: {{product.category}}</div>
-        <div class="title">Title: {{product.title}}</div>
-        <div class="price">Price: {{product.price}}</div>
-        <div class="stock">Stock: {{product.stock}}</div>
         <div class="description">Description: {{product.description}}</div>
-        <form action="/products/{{product._id}}" method="POST">
-          <button type="submit">Add to Cart</button>
-        </form>
-      </div>
+        <div class="flex justify-center items-center gap-2">
+          <a href="/products">
+            <button class="border-2 border-white rounded-xl py-1 px-2 bg-gray-600">Volver</button>
+          </a>
+          <form action="/products/{{product._id}}" method="POST" class="flex justify-center items-center">
+            <button type="submit" class="border-2 border-white rounded-xl py-1 px-2 bg-gray-600">Add to Cart</button>
+          </form>
+        </div>
     {{else}}
       <div>No disponible</div>
     {{/if}}

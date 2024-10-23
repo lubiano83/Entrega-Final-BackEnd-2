@@ -76,7 +76,9 @@ class UserController {
     };
 
     renderProfile = (req, res) => {
-        res.render("profile", { user: req.user });
+        const user = req.user;
+        const userDto = new UserDTO(user);
+        res.render("profile", { user, usuario: userDto });
     };
 }
 

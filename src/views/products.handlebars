@@ -1,21 +1,21 @@
-<section class="products__table">
-  <h1 class="titulo">Products</h1>
-  <div class="table__categories">
+<section class="flex flex-col justify-center items-center flex-wrap gap-8 py-8">
+  <h1 class="text-2xl font-bold underline">Products</h1>
+  <div class="flex justify-evenly items-center gap-8 px-8 flex-wrap">
     {{#each products.docs}}
       {{#if this.available}}
-      <article class="categories__item">
+      <article class="border-2 border-gray-700 rounded-xl w-72 overflow-hidden">
         <div class="item__foto">
-          <div><a href="{{this.thumbnail.[0]}}" target="_blank"><img class="thumbnail" src="{{this.thumbnail.[0]}}" alt="{{this.thumbnail.[0]}}"></a></div>
+          <div><a href="{{this.thumbnail.[0]}}" target="_blank"><img class="w-full aspect-square bg-white" src="{{this.thumbnail.[0]}}" alt="{{this.thumbnail.[0]}}"></a></div>
         </div>
-        <div class="item__texto">
+        <div class="p-2">
           <div class="id">Id: {{this._id}}</div>
           <div class="code">Code: {{this.code}}</div>
           <div class="category">Category: {{this.category}}</div>
           <div class="title">Title: {{this.title}}</div>
           <div class="price">Price: {{this.price}}</div>
           <div class="stock">Stock: {{this.stock}}</div>
-          <a href="http://localhost:8080/products/{{this._id}}">
-            <button>Detalle</button>
+          <a href="http://localhost:8080/products/{{this._id}}" class="flex justify-center items-center p-2">
+            <button class="border-2 border-white rounded-xl py-1 px-2 bg-gray-600">Detalle</button>
           </a>
         </div>
       </article>
@@ -24,29 +24,42 @@
   </div>
 
   <!-- Paginación -->
-  <div>
-    {{#if products.prevPage}}
-    <a href="/products?page={{products.prevPage}}{{#if products.sort}}&sort={{products.sort}}{{/if}}{{#if products.limit}}&limit={{products.limit}}{{/if}}">Anterior</a>
-    {{/if}}
+  <div class="flex flex-col justify-center items-center gap-4">
+    <div>
+      {{#if products.prevPage}}
+      <a href="/products?page={{products.prevPage}}{{#if products.sort}}&sort={{products.sort}}{{/if}}{{#if products.limit}}&limit={{products.limit}}{{/if}}">Anterior</a>
+      {{/if}}
 
-    {{#if products.nextPage}}
-    <a href="/products?page={{products.nextPage}}{{#if products.sort}}&sort={{products.sort}}{{/if}}{{#if products.limit}}&limit={{products.limit}}{{/if}}">Siguiente</a>
-    {{/if}}
-  </div>
+      {{#if products.nextPage}}
+      <a href="/products?page={{products.nextPage}}{{#if products.sort}}&sort={{products.sort}}{{/if}}{{#if products.limit}}&limit={{products.limit}}{{/if}}">Siguiente</a>
+      {{/if}}
+    </div>
 
-  <!-- Ordenación -->
-  <div>
-    <a href="/products?page={{products.page}}{{#if products.limit}}&limit={{products.limit}}{{/if}}&sort=asc">Ascendente</a>
-    <a href="/products?page={{products.page}}{{#if products.limit}}&limit={{products.limit}}{{/if}}&sort=desc">Descendente</a>
-  </div>
+    <!-- Ordenación -->
+    <div>
+      <a href="/products?page={{products.page}}{{#if products.limit}}&limit={{products.limit}}{{/if}}&sort=asc">
+        <button class="border-2 border-white rounded-xl py-1 px-2 bg-gray-600">Ascendente</button>
+      </a>
+      <a href="/products?page={{products.page}}{{#if products.limit}}&limit={{products.limit}}{{/if}}&sort=desc">
+        <button class="border-2 border-white rounded-xl py-1 px-2 bg-gray-600">Descendente</button>
+      </a>
+    </div>
 
-  <!-- Información de la página -->
-  <div class="listadoInfoProducts">
-    <a href="/products?page={{products.page}}{{#if products.limit}}&limit={{products.limit}}{{/if}}">Reset</a>
-    <p>
-      <span>Página {{products.page}} de {{products.totalPages}}</span>, 
-      <span>{{products.totalDocs}} Documentos</span> y 
-      <span>{{products.skip}} Omitidos</span>
-    </p>
+    <!-- Información de la página -->
+    <div class="flex flex-col justify-center items-center gap-3">
+      <div class="flex justify-center items-center gap-2">
+        <a href="/api/sessions/current">
+              <button class="border-2 border-white rounded-xl py-1 px-2 bg-gray-600">Volver</button>
+        </a>
+        <a href="/products?page={{products.page}}{{#if products.limit}}&limit={{products.limit}}{{/if}}">
+          <button class="border-2 border-white rounded-xl py-1 px-2 bg-gray-600">Reset</button>
+        </a>
+      </div>
+      <p>
+        <span>Página {{products.page}} de {{products.totalPages}}</span>, 
+        <span>{{products.totalDocs}} Documentos</span> y 
+        <span>{{products.skip}} Omitidos</span>
+      </p>
+    </div>
   </div>
 </section>

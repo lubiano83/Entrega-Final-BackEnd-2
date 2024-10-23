@@ -1,25 +1,30 @@
-<div class="contenedor">
-  <h1 class="titulo titulo-principal">Panel de Administración</h1>
-    <form action="/realtimeproducts" method="POST" enctype="multipart/form-data" class="ingresoProductos" id="form">
-      <div class="ingresoProductos__contenedor">
+<h1 class="text-2xl font-bold underline pt-8 text-center">Panel de Administración</h1>
+<div class="flex justify-center items-center py-8 gap-8">
+  <div class="flex flex-col gap-4">
+    <form action="/realtimeproducts" method="POST" enctype="multipart/form-data" class="flex flex-col gap-8" id="form">
+      <div>
         {{!-- <div class="contenedor__file">
           
         </div> --}}
-        <div class="contenedor__texto">
-          <input type="text" name="code" id="code" placeholder="Code" required />
-          <input type="text" name="category" id="category" placeholder="Category" required />
-          <input type="text" name="title" id="title" placeholder="Title" required />
-          <input type="text" name="file" id="file" class="file" placeholder="Image" required />
-          <input type="number" name="price" id="price" step="10" placeholder="Price" required />
-          <input type="number" name="stock" id="stock" step="1" placeholder="Stock" required />
-          <input type="text" name="description" id="description" placeholder="Description" required />
+        <div class="text-gray-700 flex flex-col gap-2">
+          <input type="text" name="code" id="code" placeholder="Code" required class="w-64 rounded-xl pl-2 h-8 text-gray-700"/>
+          <input type="text" name="category" id="category" placeholder="Category" required class="w-64 rounded-xl pl-2 h-8 text-gray-700"/>
+          <input type="text" name="title" id="title" placeholder="Title" required class="w-64 rounded-xl pl-2 h-8 text-gray-700"/>
+          <input type="text" name="file" id="file" class="w-64 rounded-xl pl-2 h-8 text-gray-700" placeholder="Image" required />
+          <input type="number" name="price" id="price" step="10" placeholder="Price" required class="w-64 rounded-xl pl-2 h-8 text-gray-700"/>
+          <input type="number" name="stock" id="stock" step="1" placeholder="Stock" required class="w-64 rounded-xl pl-2 h-8 text-gray-700"/>
+          <input type="text" name="description" id="description" placeholder="Description" required class="w-64 rounded-xl pl-2 h-8 text-gray-700"/>
         </div>
       </div>
-      <div class="contenedor__button">
-        <input type="reset" value="Limpiar" class="button limpiar" />
-        <input type="submit" value="Guardar" class="button guardar" />
+      <div class="flex justify-center items-center gap-2">
+        <input type="reset" value="Limpiar" class="button limpiar border-2 border-white rounded-xl py-1 px-2 bg-gray-600"/>
+        <input type="submit" value="Guardar" class="button guardar border-2 border-white rounded-xl py-1 px-2 bg-gray-600"/>
       </div>
     </form>
+    <a href="/api/sessions/current" class="flex justify-center items-center">
+      <button class="border-2 border-white rounded-xl py-1 px-2 bg-gray-600">Volver</button>
+    </a>
+  </div>
   <table class="contenedor__table">
     <thead class="table__categories">
       <tr class="categories__list">
