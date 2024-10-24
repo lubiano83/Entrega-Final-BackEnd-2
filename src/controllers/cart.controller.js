@@ -1,6 +1,6 @@
 import CartService from "../services/cart.service.js";
 import ProductService from "../services/product.service.js";
-import TickeModel from "../models/ticket.model.js";
+import TicketModel from "../models/ticket.model.js";
 import { respuesta } from "../utils/reutilizable.js";
 
 const cartService = new CartService();
@@ -199,7 +199,6 @@ export default class CartController {
     };
 
     completePurchase = async (req, res) => {
-        console.log(req.user);
         const cartId = req.user.cart;
         const userId = req.user.id;
         try {
@@ -210,6 +209,7 @@ export default class CartController {
 
             let total = 0;
             const productsPartialSold = [];
+            const remainingProducts = [];
 
             for (const product of cart.products) {
                 const stockAvailable = product.id.stock;
@@ -226,6 +226,11 @@ export default class CartController {
                         remainingQuantity: quantityRequested - stockAvailable,
                     });
 
+                    remainingProducts.push({
+                        id: product.id._id,
+                        quantity: quantityRequested - stockAvailable,
+                    });
+
                     await productService.updateProduct(product.id._id, { stock: 0 });
                 } else {
                     total += product.id.price * quantityRequested;
@@ -234,12 +239,13 @@ export default class CartController {
                 }
             }
 
-            const clearedCart = await cartService.clearCart(cartId);
-            if (!clearedCart) {
-                return res.status(500).json({ message: "Error al vaciar el carrito después de la compra." });
+            if (remainingProducts.length > 0) {
+                await cartService.updateCart(cartId, { products: remainingProducts });
+            } else {
+                await cartService.clearCart(cartId);
             }
 
-            const ticket = new TickeModel({
+            const ticket = new TicketModel({
                 amount: total,
                 purchaser: userId,
             });
@@ -250,7 +256,7 @@ export default class CartController {
                 message: "Compra completada con éxito",
                 totalAmount: total,
                 partiallySoldProducts: productsPartialSold,
-                cart: clearedCart,
+                cart: remainingProducts.length > 0 ? remainingProducts : [],
                 ticket,
             });
 

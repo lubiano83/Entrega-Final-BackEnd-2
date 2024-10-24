@@ -40,9 +40,9 @@ APP.use("/api/sessions", express.static(PATH.public));
 // Declaración de enrutadores
 APP.use("/", viewsRouter);
 APP.use("/carts", permissions, soloUser, viewsCartRouter);
-APP.use("/api/carts", permissions, soloAdmin, cartRouter);
+APP.use("/api/carts", /*permissions, soloAdmin,*/ cartRouter);
 APP.use("/products", permissions, soloUser, viewsProductRouter);
-APP.use("/api/products", permissions, soloAdmin, productRouter);
+APP.use("/api/products", /*permissions, soloAdmin,*/ productRouter);
 APP.use("/api/sessions", userRouter);
 
 // Método que gestiona las rutas inexistentes.
