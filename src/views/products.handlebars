@@ -3,7 +3,7 @@
   <div class="flex justify-evenly items-center gap-8 px-8 flex-wrap">
     {{#each products.docs}}
       {{#if this.available}}
-      <article class="border-2 border-gray-700 rounded-xl w-72 overflow-hidden">
+      <article class="border-2 border-gray-700 rounded-xl w-72 overflow-hidden bg-gray-700">
         <div class="item__foto">
           <div><a href="{{this.thumbnail.[0]}}" target="_blank"><img class="w-full aspect-square bg-white" src="{{this.thumbnail.[0]}}" alt="{{this.thumbnail.[0]}}"></a></div>
         </div>
@@ -15,7 +15,7 @@
           <div class="price">Price: {{this.price}}</div>
           <div class="stock">Stock: {{this.stock}}</div>
           <a href="http://localhost:8080/products/{{this._id}}" class="flex justify-center items-center p-2">
-            <button class="border-2 border-white rounded-xl py-1 px-2 bg-gray-600">Detalle</button>
+            <button class="border-2 border-white rounded-xl py-1 px-2 bg-blue-500">Detalle</button>
           </a>
         </div>
       </article>
@@ -56,9 +56,13 @@
         </a>
       </div>
       <p>
-        <span>Página {{products.page}} de {{products.totalPages}}</span>, 
+        <span>Página {{products.page}} de {{products.totalPages}}</span>,
         <span>{{products.totalDocs}} Documentos</span> y 
-        <span>{{products.skip}} Omitidos</span>
+        {{#unless products.skip}}
+        <span>0 Omitidos</span>
+        {{else}}
+          <span>{{products.skip}} Omitidos</span>
+        {{/unless}}
       </p>
     </div>
   </div>
