@@ -252,13 +252,17 @@ export default class CartController {
 
             await ticket.save();
 
-            return res.status(200).json({
+            const ticketInfo = {
                 message: "Compra completada con éxito",
                 totalAmount: total,
                 partiallySoldProducts: productsPartialSold,
                 cart: remainingProducts.length > 0 ? remainingProducts : [],
                 ticket,
-            });
+            };
+
+            console.log(ticketInfo);
+
+            return res.status(200).render("ticket", ticketInfo);
 
         } catch (error) {
             console.error("Error en completePurchase:", error);

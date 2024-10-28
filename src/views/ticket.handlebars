@@ -1,0 +1,37 @@
+<div class="flex flex-col justify-center items-center gap-8">
+    <h1>Ticket de Compra:</h1>
+    <div>
+        <div>{{message}}</div>
+        <p>Total de la compra: ${{totalAmount}}</p>
+    </div>
+    {{#if partiallySoldProducts.length}}
+    <h2>Productos Parcialmente Vendidos</h2>
+    <ul>
+        {{#each partiallySoldProducts}}
+        <li>
+            <strong>{{title}}</strong> - Solicitado: {{requestedQuantity}}, Vendido: {{soldQuantity}}, Restante: {{remainingQuantity}}
+        </li>
+        {{/each}}
+    </ul>
+    {{else}}
+    <p>No hay productos parcialmente vendidos.</p>
+    {{/if}}
+
+    {{#if cart.length}}
+    <h2>Productos Restantes en el Carrito</h2>
+    <ul>
+        {{#each cart}}
+        <li>ID del Producto: {{id}}, Cantidad Restante: {{quantity}}</li>
+        {{/each}}
+    </ul>
+    {{else}}
+    <p>No hay productos restantes en el carrito.</p>
+    {{/if}}
+    <h2>Detalles del Ticket</h2>
+    <div>
+        <p>ID del Ticket: {{ticket._id}}</p>
+        <p>Monto Total: ${{ticket.amount}}</p>
+        <p>Comprador: {{ticket.purchaser}}</p>
+        <p>Fecha de Compra: {{ticket.purchaseDatetime}}</p>
+    </div>
+</div>
