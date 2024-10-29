@@ -260,8 +260,6 @@ export default class CartController {
                 ticket,
             };
 
-            console.log(ticketInfo);
-
             return res.status(200).render("ticket", ticketInfo);
 
         } catch (error) {
